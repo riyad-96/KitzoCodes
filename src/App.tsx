@@ -1,7 +1,24 @@
+import { ToastContainer } from 'kitzo/react';
+import { Outlet } from 'react-router-dom';
+import { motion } from 'motion/react';
+
 export default function App() {
   return (
-    <div className="grid bg-green-400 font-bold">
-      <div>App</div>
-    </div>
+    <motion.div
+      initial={{
+        opacity: 0,
+        scale: 0.99,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+      }}
+      className="text-code-850 h-dvh overflow-y-auto"
+    >
+      <div className="h-full">
+        <Outlet />
+      </div>
+      <ToastContainer />
+    </motion.div>
   );
 }
