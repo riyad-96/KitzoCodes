@@ -25,7 +25,7 @@ const AppRoutes = createBrowserRouter([
             element: <Home />,
           },
           {
-            path: 'code',
+            path: 'code/:id',
             element: <ProtectedPageWrapper children={<Code />} />,
           },
         ],

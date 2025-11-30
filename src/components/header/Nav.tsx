@@ -1,16 +1,32 @@
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { ProfilePlaceholderSvg } from '../../assets/Svgs';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 import { useEffect } from 'react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../configs/firebase.config';
+import { toast } from 'kitzo/react';
 
 export default function Nav() {
   const { user } = useAuthContext();
+  const [dropdownShowing, setDropdownShowing] = useState<boolean>(false);
 
   useEffect(() => {
-    document.addEventListener('click', (e) => {
-      console.log(e.target);
-    });
+    function closeDropdown(e: PointerEvent | TouchEvent) {
+      const doc = e.target as HTMLElement;
+      if (doc.closest('.dropdown')) return;
+      if (doc.closest('.dropdown-btn')) return;
+      setDropdownShowing(false);
+    }
+
+    document.addEventListener('click', closeDropdown);
+    document.addEventListener('touchstart', closeDropdown);
+
+    return () => {
+      document.removeEventListener('click', closeDropdown);
+      document.removeEventListener('touchstart', closeDropdown);
+    };
   }, []);
 
   return (
@@ -26,10 +42,57 @@ export default function Nav() {
                   <ProfilePlaceholderSvg className="size-full" />
                 </span>
               )}
-              <button className="absolute inset-0 z-1"></button>
+              <button
+                onClick={() => {
+                  if (dropdownShowing) {
+                    setDropdownShowing(false);
+                    return;
+                  }
+                  setDropdownShowing(true);
+                }}
+                className="dropdown-btn absolute inset-0 z-1"
+              ></button>
             </div>
 
-            <motion.div></motion.div>
+            <AnimatePresence>
+              {dropdownShowing && (
+                <motion.div
+                  initial={{
+                    scale: 0.8,
+                    opacity: 0,
+                  }}
+                  animate={{
+                    scale: 1,
+                    opacity: 1,
+                  }}
+                  exit={{
+                    scale: 0.8,
+                    opacity: 0,
+                  }}
+                  transition={{
+                    duration: 0.1,
+                  }}
+                  className="dropdown bg-code absolute top-[calc(100%+20px)] right-0 w-[120px] origin-top-right rounded-lg p-1 shadow"
+                >
+                  <div className="grid overflow-hidden rounded-md">
+                    <button className="pointer-fine:hover:bg-code-50 py-1.5">
+                      Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        signOut(auth).then((kichhu) => {
+                          console.log(kichhu);
+                          toast.success('Logout successful');
+                        });
+                      }}
+                      className="pointer-fine:hover:bg-code-50 py-1.5"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       ) : (

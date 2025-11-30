@@ -24,7 +24,7 @@ export default function Signup() {
       toast.success('Registration successful');
     } catch (err) {
       const error = err as FirebaseError;
-      if (error.code === 'auth/email-already-exists') {
+      if (error.code === 'auth/email-already-in-use') {
         toast.custom(<CustomToast text="Email already exists" />);
       }
     } finally {

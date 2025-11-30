@@ -34,7 +34,6 @@ export default function Login() {
           duration: 3500,
         });
       }
-      console.log(error.code);
     } finally {
       setLogging(false);
     }
