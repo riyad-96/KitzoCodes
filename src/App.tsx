@@ -13,7 +13,7 @@ export default function App() {
         opacity: 1,
         scale: 1,
       }}
-      className="text-code-850 h-dvh overflow-y-auto"
+      className="text-code-850 h-dvh overflow-hidden"
     >
       <div className="h-full">
         <Outlet />

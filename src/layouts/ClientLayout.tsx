@@ -4,7 +4,7 @@ import Footer from '../components/footer/Footer';
 
 export default function ClientLayout() {
   return (
-    <div className="h-full px-2 md:px-3">
+    <div className="h-full overflow-y-auto px-2 md:px-3">
       <div className="mx-auto h-full max-w-[1300px]">
         <Header />
         <div className="grid h-full grid-rows-[1fr_auto] pt-20">

@@ -81,8 +81,7 @@ export default function Nav() {
                     </button>
                     <button
                       onClick={() => {
-                        signOut(auth).then((kichhu) => {
-                          console.log(kichhu);
+                        signOut(auth).then(() => {
                           toast.success('Logout successful');
                         });
                       }}
@@ -104,7 +103,13 @@ export default function Nav() {
           >
             Login
           </Link>
-          <GlossyButton content={<Link className="px-3 py-1" to="/auth/signup">Register</Link>} />
+          <GlossyButton
+            content={
+              <Link className="px-3 py-1" to="/auth/signup">
+                Register
+              </Link>
+            }
+          />
         </div>
       )}
     </nav>
