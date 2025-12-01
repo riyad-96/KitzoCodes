@@ -12,7 +12,7 @@ export default function Home() {
   const { isLoading, data } = useQuery<CodeFolder[]>({
     queryKey: ['code_folders'],
     queryFn: async () => {
-      const response = await server.get('/codefolder/get');
+      const response = await server.get('/codefolder/getall');
       return response.data;
     },
   });
