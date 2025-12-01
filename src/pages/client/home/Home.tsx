@@ -23,7 +23,6 @@ export default function Home() {
       return response.data;
     },
     onSuccess() {
-      // console.log('payload: ', data);
       queryClient.invalidateQueries({
         queryKey: ['code_folders'],
       });

@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../configs/firebase.config';
 import { toast } from 'kitzo/react';
+import GlossyButton from '../ui/GlossyButton';
 
 export default function Nav() {
   const { user } = useAuthContext();
@@ -103,12 +104,7 @@ export default function Nav() {
           >
             Login
           </Link>
-          <Link
-            className="bg-code-50 border-code-100 inset-shadow-code rounded-full border px-3 py-1 text-sm font-medium shadow-xs inset-shadow-2xs active:transform-[scale(0.96)]"
-            to="/auth/signup"
-          >
-            Register
-          </Link>
+          <GlossyButton content={<Link className="px-3 py-1" to="/auth/signup">Register</Link>} />
         </div>
       )}
     </nav>

@@ -3,7 +3,7 @@ import App from '../App';
 import ClientLayout from '../layouts/ClientLayout';
 import AuthLayout from '../layouts/AuthLayout';
 import Home from '../pages/client/home/Home';
-import Code from '../pages/client/code/Code';
+import CodeFolder from '../pages/client/code/CodeFolder';
 import Login from '../pages/auth/Login';
 import Signup from '../pages/auth/Signup';
 import AppContexts from '../contexts/AppContexts';
@@ -26,7 +26,7 @@ const AppRoutes = createBrowserRouter([
           },
           {
             path: 'code/:id',
-            element: <ProtectedPageWrapper children={<Code />} />,
+            element: <ProtectedPageWrapper children={<CodeFolder />} />,
           },
         ],
       },
