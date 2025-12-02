@@ -66,13 +66,13 @@ export default function Code() {
         });
         return response.data;
       },
-      onSuccess: (data, variables) => {
+      onSuccess: (_data, { code_block_id }) => {
         setEditorState(null);
         queryClient.invalidateQueries({
           queryKey: ['code_folder', codeFolderId],
         });
         queryClient.invalidateQueries({
-          queryKey: ['code_block', variables.code_block_id],
+          queryKey: ['code_block', code_block_id],
         });
       },
     });
