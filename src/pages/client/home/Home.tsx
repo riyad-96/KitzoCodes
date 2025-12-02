@@ -3,9 +3,13 @@ import { useAxios } from '../../../hooks/axios.hook';
 import { PlusIcon } from 'lucide-react';
 import type { CodeFolder } from '../../../types/types';
 import EachCodeFolderCard from './EachCodeFolderCard';
+import { useAuthContext } from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const server = useAxios();
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
@@ -15,6 +19,7 @@ export default function Home() {
       const response = await server.get('/codefolder/getall');
       return response.data;
     },
+    enabled: !!user,
   });
 
   const { mutate, isPending } = useMutation({
@@ -59,7 +64,13 @@ export default function Home() {
                   <span className="text-lg font-semibold">Add Code folder</span>
                 </div>
                 <button
-                  onClick={createCodeFolder}
+                  onClick={() => {
+                    if (!user) {
+                      navigate('/auth/login');
+                      return;
+                    }
+                    createCodeFolder();
+                  }}
                   className="absolute inset-0"
                 ></button>
               </>

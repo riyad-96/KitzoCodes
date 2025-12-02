@@ -10,11 +10,13 @@ import AppContexts from '../contexts/AppContexts';
 import AuthProtectedWrapper from './protected-wrapper/AuthProtectedWrapper';
 import ProtectedPageWrapper from './protected-wrapper/ProtectedPageWrapper';
 import LoadingLayout from '../layouts/LoadingLayout';
+import NotFound from '../pages/notfound/NotFound';
 
 const AppRoutes = createBrowserRouter([
   {
     path: '/',
     element: <AppContexts children={<LoadingLayout children={<App />} />} />,
+    errorElement: <NotFound />,
     children: [
       {
         path: '',

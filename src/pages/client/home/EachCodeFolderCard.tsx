@@ -54,7 +54,7 @@ export default function EachCodeFolderCard({ folder }: EachCodeFolderCard) {
         </Tooltip>
 
         <Tooltip
-          content={`${code_blocks.length} Files`}
+          content={`${code_blocks.length} Blocks`}
           tooltipOptions={{ delay: 40 }}
         >
           <div className="bg-code-150 relative z-2 flex w-fit cursor-default items-center gap-1 rounded-lg px-2 py-1 text-xs">

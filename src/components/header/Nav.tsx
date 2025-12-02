@@ -8,10 +8,12 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../configs/firebase.config';
 import { toast } from 'kitzo/react';
 import GlossyButton from '../ui/GlossyButton';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Nav() {
   const { user } = useAuthContext();
   const [dropdownShowing, setDropdownShowing] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     function closeDropdown(e: PointerEvent | TouchEvent) {
@@ -83,6 +85,7 @@ export default function Nav() {
                       onClick={() => {
                         signOut(auth).then(() => {
                           toast.success('Logout successful');
+                          queryClient.clear();
                         });
                       }}
                       className="pointer-fine:hover:bg-code-50 py-1.5"

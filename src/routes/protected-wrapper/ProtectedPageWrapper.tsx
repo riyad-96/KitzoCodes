@@ -11,7 +11,7 @@ export default function ProtectedPageWrapper({
   const location = useLocation();
 
   if (!user) {
-    <Navigate to="/auth/login" state={location.pathname} />;
+    return <Navigate to="/auth/login" state={location.pathname} />;
   }
 
   return children;

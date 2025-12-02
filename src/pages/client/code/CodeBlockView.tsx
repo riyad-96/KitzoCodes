@@ -41,7 +41,15 @@ export default function CodeBlockView({
   const [copied, setCopied] = useState<boolean>(false);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="border-code-100 space-y-3 rounded-2xl border p-3">
+        <div className="space-y-2">
+          <div className="bg-code-200 h-6 w-40/100 animate-pulse rounded-xl"></div>
+          <div className="bg-code-200 h-6 w-80/100 animate-pulse rounded-xl"></div>
+        </div>
+        <div className="bg-code-200 h-[150px] animate-pulse rounded-xl"></div>
+      </div>
+    );
   }
 
   return (

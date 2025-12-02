@@ -10,6 +10,7 @@ import CodeBlockView from './CodeBlockView';
 import type { CodeFolder } from '../../../types/types';
 import type { AxiosError } from 'axios';
 import DeleteModal from '../../../components/ui/DeleteModal';
+import { useAuthContext } from '../../../contexts/AuthContext';
 
 export type CodeBlockActionTypes = {
   title: string;
@@ -24,6 +25,7 @@ export type DeleteInfoType = {
 } | null;
 
 export default function Code() {
+  const { user } = useAuthContext();
   const server = useAxios();
   const params = useParams();
   const codeFolderId = params.id;
@@ -35,6 +37,7 @@ export default function Code() {
       const response = await server.get(`/codefolder/get/${codeFolderId}`);
       return response.data;
     },
+    enabled: !!user,
   });
 
   const add_codeMutation = useMutation({
