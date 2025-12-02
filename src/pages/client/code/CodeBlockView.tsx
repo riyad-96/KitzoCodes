@@ -25,7 +25,7 @@ type CodeBlockViewProps = {
 
 export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
   const server = useAxios();
-  const { setDeletingInfo } = useCodeContext();
+  const { setDeletingInfo, setEditDetails, setEditorState } = useCodeContext();
 
   const { data, isLoading } = useQuery<CodeBlock>({
     queryKey: ['code_block', codeBlockId],
@@ -102,6 +102,10 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
                   <PencilLineIcon size="16" />
                 </span>
               }
+              onClick={() => {
+                setEditDetails(data as CodeBlock);
+                setEditorState('update');
+              }}
             />
           </Tooltip>
 

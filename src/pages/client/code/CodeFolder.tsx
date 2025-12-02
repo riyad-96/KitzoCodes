@@ -12,7 +12,7 @@ import { useCodeContext } from '../../../contexts/CodeContext';
 // types
 import type { CodeFolder } from '../../../types/types';
 import type { AxiosError } from 'axios';
-import type { EditorValuesType } from './EditorModal';
+import type { EditorValuesType, EditorUpdateValuesType } from './types/types';
 
 export default function Code() {
   const { user } = useAuthContext();
@@ -59,15 +59,35 @@ export default function Code() {
   // update code block
   const { mutate: updateCodeBlock, isPending: isUpdatingCodeBlock } =
     useMutation({
-      mutationFn: async (values: EditorValuesType) => {
-        const response = await server.post('/code/update', {
+      mutationFn: async (values: EditorUpdateValuesType) => {
+        const response = await server.patch('/code/update', {
           folder_id: codeFolderId,
           ...values,
         });
         return response.data;
       },
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         setEditorState(null);
+        queryClient.invalidateQueries({
+          queryKey: ['code_folder', codeFolderId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['code_block', variables.code_block_id],
+        });
+      },
+    });
+
+  // delete code block
+  const { mutate: deleteCodeBlock, isPending: isDeletingCodeBlock } =
+    useMutation({
+      mutationFn: async (code_block_id: string) => {
+        const response = await server.delete(
+          `/code/delete/${codeFolderId}/${code_block_id}`,
+        );
+        return response.data;
+      },
+      onSuccess: () => {
+        setDeletingInfo(null);
         queryClient.invalidateQueries({
           queryKey: ['code_folder', codeFolderId],
         });
@@ -145,8 +165,12 @@ export default function Code() {
                     ' code block permanently? This action is irreversible.
                   </span>
                 }
+                isLoading={isDeletingCodeBlock}
                 cancelFn={() => setDeletingInfo(null)}
-                clickFn={() => {}}
+                clickFn={() => {
+                  if (isDeletingCodeBlock) return;
+                  deleteCodeBlock(deletingInfo.code_block_id);
+                }}
               />
             )}
           </AnimatePresence>

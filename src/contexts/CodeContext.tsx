@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { DeleteInfoType } from '../pages/client/code/types/types';
+import type { CodeBlock } from '../types/types';
 
 //! type for context
 type CodeContextType = {
@@ -8,6 +9,8 @@ type CodeContextType = {
   setDeletingInfo: React.Dispatch<React.SetStateAction<DeleteInfoType | null>>;
   editorState: 'new' | 'update' | null;
   setEditorState: React.Dispatch<React.SetStateAction<'new' | 'update' | null>>;
+  editDetails: CodeBlock | null;
+  setEditDetails: React.Dispatch<React.SetStateAction<CodeBlock | null>>;
 };
 
 const NewContext = createContext<CodeContextType | null>(null);
@@ -20,6 +23,9 @@ function CodeContext({ children }: { children: ReactNode }) {
   // editor state
   const [editorState, setEditorState] = useState<'new' | 'update' | null>(null);
 
+  // edit details
+  const [editDetails, setEditDetails] = useState<CodeBlock | null>(null);
+
   return (
     <NewContext.Provider
       value={{
@@ -27,6 +33,8 @@ function CodeContext({ children }: { children: ReactNode }) {
         setDeletingInfo,
         editorState,
         setEditorState,
+        editDetails,
+        setEditDetails,
       }}
     >
       {children}

@@ -7,6 +7,7 @@ type DeleteModalPropsType = {
   description: ReactNode;
   cancelFn: () => void;
   clickFn: () => void;
+  isLoading?: boolean;
 };
 
 export default function DeleteModal({
@@ -14,6 +15,7 @@ export default function DeleteModal({
   description,
   cancelFn,
   clickFn,
+  isLoading,
 }: DeleteModalPropsType) {
   return (
     <Modal
@@ -35,8 +37,12 @@ export default function DeleteModal({
         />
         <GlossyButton
           content={
-            <span className="grid h-7.5 place-items-center bg-red-200 px-4 text-sm tracking-wide">
-              Delete
+            <span className="grid h-7.5 w-[75px] place-items-center bg-red-200 text-sm tracking-wide">
+              {isLoading ? (
+                <span className="loading loading-spinner loading-xs opacity-80"></span>
+              ) : (
+                <span>Delete</span>
+              )}
             </span>
           }
           onClick={clickFn}

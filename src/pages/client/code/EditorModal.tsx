@@ -1,27 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GlossyButton from '../../../components/ui/GlossyButton';
 import Modal from '../../../components/ui/Modal';
-import { supportedLanguages } from './utils/editorLanguage';
+
 import Select from 'react-select';
+import { supportedLanguages } from './utils/editorLanguage';
 import { supportedThemes } from './utils/editorStyle';
+import { useCodeContext } from '../../../contexts/CodeContext';
+import type { EditorUpdateValuesType, EditorValuesType } from './types/types';
 
 type EditorModalProps = {
   editorState: 'new' | 'update' | null;
   setEditorState: React.Dispatch<React.SetStateAction<'new' | 'update' | null>>;
   actions: {
     addNewCodeBlock: (values: EditorValuesType) => void;
-    updateCodeBlock: (values: EditorValuesType) => void;
+    updateCodeBlock: (values: EditorUpdateValuesType) => void;
   };
   isAdding: boolean;
   isUpdating: boolean;
-};
-
-export type EditorValuesType = {
-  title: string;
-  description: string;
-  code: string;
-  language: string;
-  theme: string;
 };
 
 export default function EditorModal({
@@ -31,20 +26,50 @@ export default function EditorModal({
   isAdding,
   isUpdating,
 }: EditorModalProps) {
+  const { editDetails } = useCodeContext();
   const { addNewCodeBlock, updateCodeBlock } = actions;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [values, setValues] = useState<EditorValuesType>({
-    title: '',
-    description: '',
-    code: '',
-    language: 'plaintext',
-    theme: 'dracula',
+  const [values, setValues] = useState<EditorValuesType>(() => {
+    if (editorState === 'update') {
+      return {
+        title: editDetails?.title ?? '',
+        description: editDetails?.description ?? '',
+        code: editDetails?.code ?? '',
+        language: editDetails?.language ?? 'plaintext',
+        theme: editDetails?.theme ?? 'coy',
+      };
+    }
+    return {
+      title: '',
+      description: '',
+      code: '',
+      language: 'plaintext',
+      theme: 'coy',
+    };
   });
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  function getDefaultLanguage() {
+    const defaultLanguage = supportedLanguages.find(
+      (l) => l.value === values.language,
+    );
+    return {
+      value: defaultLanguage?.value,
+      label: defaultLanguage?.name,
+    };
+  }
+
+  function getDefaultTheme() {
+    const defaultTheme = supportedThemes.find((t) => t.value === values.theme);
+    return {
+      value: defaultTheme?.value,
+      label: defaultTheme?.name,
+    };
+  }
 
   return (
     <Modal
@@ -79,6 +104,7 @@ export default function EditorModal({
             <Select
               id="language"
               className="min-w-[130px] text-sm max-sm:flex-2"
+              value={getDefaultLanguage()}
               onChange={(target) =>
                 setValues((prev) => ({
                   ...prev,
@@ -96,6 +122,7 @@ export default function EditorModal({
             <Select
               id="language"
               className="min-w-[130px] text-sm max-sm:flex-2"
+              value={getDefaultTheme()}
               onChange={(target) =>
                 setValues((prev) => ({
                   ...prev,
@@ -132,7 +159,10 @@ export default function EditorModal({
             if (editorState === 'new') {
               addNewCodeBlock(values);
             } else {
-              updateCodeBlock(values);
+              updateCodeBlock({
+                ...values,
+                code_block_id: editDetails?._id as string,
+              });
             }
           }}
           content={
