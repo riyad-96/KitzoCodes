@@ -3,35 +3,32 @@ import { useParams } from 'react-router-dom';
 import { useAxios } from '../../../hooks/axios.hook';
 import { AnimatePresence } from 'motion/react';
 import EditorModal from './EditorModal';
-import { useState } from 'react';
 import GlossyButton from '../../../components/ui/GlossyButton';
 import CodeBlockView from './CodeBlockView';
+import { useAuthContext } from '../../../contexts/AuthContext';
+import DeleteModal from '../../../components/ui/DeleteModal';
+import { useCodeContext } from '../../../contexts/CodeContext';
+
 // types
 import type { CodeFolder } from '../../../types/types';
 import type { AxiosError } from 'axios';
-import DeleteModal from '../../../components/ui/DeleteModal';
-import { useAuthContext } from '../../../contexts/AuthContext';
-
-export type CodeBlockActionTypes = {
-  title: string;
-  description: string;
-  code: string;
-};
-
-export type DeleteInfoType = {
-  code_block_title: string;
-  code_block_id: string;
-  folder_id: string;
-} | null;
+import type { EditorValuesType } from './EditorModal';
 
 export default function Code() {
   const { user } = useAuthContext();
+  const { editorState, setEditorState, deletingInfo, setDeletingInfo } =
+    useCodeContext();
+
   const server = useAxios();
   const params = useParams();
   const codeFolderId = params.id;
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery<CodeFolder, AxiosError>({
+  const {
+    data: codeFolder,
+    isLoading: codeFolderLoading,
+    error: codeFolderError,
+  } = useQuery<CodeFolder, AxiosError>({
     queryKey: ['code_folder', codeFolderId],
     queryFn: async () => {
       const response = await server.get(`/codefolder/get/${codeFolderId}`);
@@ -40,39 +37,44 @@ export default function Code() {
     enabled: !!user,
   });
 
-  const add_codeMutation = useMutation({
-    mutationFn: async (values: CodeBlockActionTypes) => {
-      const response = await server.post('/code/add', {
-        folder_id: codeFolderId,
-        ...values,
-      });
-      return response.data;
+  // add new code block
+  const { mutate: addNewCodeBlock, isPending: isAddingCodeBlock } = useMutation(
+    {
+      mutationFn: async (values: EditorValuesType) => {
+        const response = await server.post('/code/add', {
+          folder_id: codeFolderId,
+          ...values,
+        });
+        return response.data;
+      },
+      onSuccess: () => {
+        setEditorState(null);
+        queryClient.invalidateQueries({
+          queryKey: ['code_folder', codeFolderId],
+        });
+      },
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['code_folder', codeFolderId],
-      });
-    },
-  });
+  );
 
-  // add new block
-  async function addNewCodeBlock(values: CodeBlockActionTypes) {
-    await add_codeMutation.mutateAsync(values);
-
-    setEditorState(null);
-  }
   // update code block
-  function updateCodeBlock(values: CodeBlockActionTypes) {
-    console.log(values);
-  }
+  const { mutate: updateCodeBlock, isPending: isUpdatingCodeBlock } =
+    useMutation({
+      mutationFn: async (values: EditorValuesType) => {
+        const response = await server.post('/code/update', {
+          folder_id: codeFolderId,
+          ...values,
+        });
+        return response.data;
+      },
+      onSuccess: () => {
+        setEditorState(null);
+        queryClient.invalidateQueries({
+          queryKey: ['code_folder', codeFolderId],
+        });
+      },
+    });
 
-  // delete code block
-  const [deletingInfo, setDeletingInfo] = useState<DeleteInfoType>();
-
-  // editor state
-  const [editorState, setEditorState] = useState<'new' | 'update' | null>(null);
-
-  if (error) {
+  if (codeFolderError) {
     return (
       <div>
         <p className="pt-16 text-center">Folder doesn't exists</p>
@@ -82,7 +84,7 @@ export default function Code() {
 
   return (
     <>
-      {isLoading ? (
+      {codeFolderLoading ? (
         <div className="flex justify-center pt-42">
           <span className="loading loading-spinner loading-xl opacity-80"></span>
         </div>
@@ -91,10 +93,10 @@ export default function Code() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-code-800 text-xl font-semibold">
-                {data?.folder_name || 'Unknown folder name'}
+                {codeFolder?.folder_name || 'Unknown folder name'}
               </h2>
               <p className="text-code-800">
-                {data?.folder_description || 'No description yet'}
+                {codeFolder?.folder_description || 'No description yet'}
               </p>
             </div>
 
@@ -106,14 +108,10 @@ export default function Code() {
             </div>
           </div>
 
-          {(data?.code_blocks?.length ?? 0 > 0) ? (
+          {(codeFolder?.code_blocks?.length ?? 0 > 0) ? (
             <div className="mt-8 space-y-8">
-              {data?.code_blocks?.map((b) => (
-                <CodeBlockView
-                  key={b}
-                  codeBlockId={b}
-                  setDeletingInfo={setDeletingInfo}
-                />
+              {codeFolder?.code_blocks?.map((b) => (
+                <CodeBlockView key={b} codeBlockId={b} />
               ))}
             </div>
           ) : (
@@ -128,8 +126,8 @@ export default function Code() {
                 editorState={editorState}
                 setEditorState={setEditorState}
                 actions={{ addNewCodeBlock, updateCodeBlock }}
-                isAdding={add_codeMutation.isPending}
-                isUpdating={add_codeMutation.isPending}
+                isAdding={isAddingCodeBlock}
+                isUpdating={isUpdatingCodeBlock}
               />
             )}
           </AnimatePresence>

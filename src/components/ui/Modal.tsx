@@ -17,7 +17,7 @@ export default function Modal({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onMouseDown={onMouseDown}
-      className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/30 px-4 pt-16 pb-26"
+      className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/40 px-4 pt-16 pb-26"
     >
       <motion.div
         initial={{ opacity: 0, scale: 1.2 }}

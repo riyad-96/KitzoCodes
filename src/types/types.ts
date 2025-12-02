@@ -7,6 +7,7 @@ export type CodeBlock = {
   description: string;
   code: string;
   language: string;
+  theme: string;
   createdAt: number;
   updatedAt: number;
 };

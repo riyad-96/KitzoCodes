@@ -1,18 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GlossyButton from '../../../components/ui/GlossyButton';
-
-import type { CodeBlockActionTypes } from './CodeFolder';
 import Modal from '../../../components/ui/Modal';
+import { supportedLanguages } from './utils/editorLanguage';
+import Select from 'react-select';
+import { supportedThemes } from './utils/editorStyle';
 
 type EditorModalProps = {
   editorState: 'new' | 'update' | null;
   setEditorState: React.Dispatch<React.SetStateAction<'new' | 'update' | null>>;
   actions: {
-    addNewCodeBlock: (values: CodeBlockActionTypes) => void;
-    updateCodeBlock: (values: CodeBlockActionTypes) => void;
+    addNewCodeBlock: (values: EditorValuesType) => void;
+    updateCodeBlock: (values: EditorValuesType) => void;
   };
   isAdding: boolean;
   isUpdating: boolean;
+};
+
+export type EditorValuesType = {
+  title: string;
+  description: string;
+  code: string;
+  language: string;
+  theme: string;
 };
 
 export default function EditorModal({
@@ -25,10 +34,12 @@ export default function EditorModal({
   const { addNewCodeBlock, updateCodeBlock } = actions;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [values, setValues] = useState({
+  const [values, setValues] = useState<EditorValuesType>({
     title: '',
     description: '',
     code: '',
+    language: 'plaintext',
+    theme: 'dracula',
   });
 
   useEffect(() => {
@@ -61,14 +72,49 @@ export default function EditorModal({
         />
       </div>
 
-      <div className="relative grid gap-1">
-        <p className="text-code-800 pl-1">Type/paste code below</p>
+      <div className="relative grid gap-2">
+        <div className="grid gap-2 sm:flex sm:items-center sm:justify-end">
+          <div className="flex items-center gap-2">
+            <span className="max-sm:flex-1">Language</span>
+            <Select
+              id="language"
+              className="min-w-[130px] text-sm max-sm:flex-2"
+              onChange={(target) =>
+                setValues((prev) => ({
+                  ...prev,
+                  language: target?.value as string,
+                }))
+              }
+              options={supportedLanguages.map((l) => ({
+                label: l.name,
+                value: l.value,
+              }))}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="max-sm:flex-1">Theme</span>
+            <Select
+              id="language"
+              className="min-w-[130px] text-sm max-sm:flex-2"
+              onChange={(target) =>
+                setValues((prev) => ({
+                  ...prev,
+                  theme: target?.value as string,
+                }))
+              }
+              options={supportedThemes.map((t) => ({
+                label: t.name,
+                value: t.value,
+              }))}
+            />
+          </div>
+        </div>
         <textarea
           value={values.code}
           onChange={(e) =>
             setValues((prev) => ({ ...prev, code: e.target.value }))
           }
-          placeholder="Code here"
+          placeholder="Type/paste code here"
           className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 relative max-h-[500px] min-h-[150px] resize-y overflow-y-auto rounded-md border px-2.5 py-1.5 font-[monospace] text-base ring-2 ring-transparent transition-shadow outline-none"
         />
       </div>

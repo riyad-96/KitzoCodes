@@ -11,6 +11,7 @@ import AuthProtectedWrapper from './protected-wrapper/AuthProtectedWrapper';
 import ProtectedPageWrapper from './protected-wrapper/ProtectedPageWrapper';
 import LoadingLayout from '../layouts/LoadingLayout';
 import NotFound from '../pages/notfound/NotFound';
+import CodeContext from '../contexts/CodeContext';
 
 const AppRoutes = createBrowserRouter([
   {
@@ -28,7 +29,15 @@ const AppRoutes = createBrowserRouter([
           },
           {
             path: 'code/:id',
-            element: <ProtectedPageWrapper children={<CodeFolder />} />,
+            element: (
+              <ProtectedPageWrapper
+                children={
+                  <CodeContext>
+                    <CodeFolder />
+                  </CodeContext>
+                }
+              />
+            ),
           },
         ],
       },
