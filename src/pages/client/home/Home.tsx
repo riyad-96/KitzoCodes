@@ -5,6 +5,12 @@ import type { CodeFolder } from '../../../types/types';
 import EachCodeFolderCard from './EachCodeFolderCard';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'motion/react';
+import Modal from '../../../components/ui/Modal';
+import { useCodeContext } from '../../../contexts/CodeContext';
+import type { UpdateFolderDetailsType } from '../../../contexts/CodeContext';
+import GlossyButton from '../../../components/ui/GlossyButton';
+import DeleteModal from '../../../components/ui/DeleteModal';
 
 export default function Home() {
   const server = useAxios();
@@ -37,6 +43,18 @@ export default function Home() {
   const createCodeFolder = () => {
     mutate();
   };
+
+  // update folder
+  const {
+    updateDetails,
+    setUpdateDetails,
+    updatingFolderDetails,
+    updateFolderDetails,
+    folderDeleteDetails,
+    setFolderDeleteDetails,
+    deleteFolder,
+    deletingFolder,
+  } = useCodeContext();
 
   return (
     <div className="pt-4">
@@ -77,11 +95,116 @@ export default function Home() {
             )}
           </div>
 
-          {data?.map((f) => (
-            <EachCodeFolderCard key={f._id} folder={f} />
+          {data?.map((f, i) => (
+            <EachCodeFolderCard key={f._id} i={i} folder={f} />
           ))}
         </div>
       )}
+
+      <AnimatePresence>
+        {updateDetails && (
+          <Modal
+            className="w-full max-w-[500px] rounded-2xl bg-white p-4"
+            onMouseDown={() => setUpdateDetails(null)}
+          >
+            <div className="mb-4 space-y-2">
+              <div className="grid gap-1">
+                <label className="w-fit" htmlFor="folder-title">
+                  Name
+                </label>
+                <input
+                  className="border-code-150 focus:ring-code-300 focus:border-code-300 rounded-md border px-3 py-2 ring-2 ring-transparent transition-shadow outline-none"
+                  id="folder-title"
+                  type="text"
+                  placeholder="Folder name"
+                  value={updateDetails.folder_name}
+                  onChange={(e) =>
+                    setUpdateDetails(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          folder_name: e.target.value,
+                        }) as UpdateFolderDetailsType,
+                    )
+                  }
+                />
+              </div>
+
+              <div className="grid gap-1">
+                <label className="w-fit" htmlFor="folder-description">
+                  Description
+                </label>
+                <textarea
+                  className="border-code-150 focus:ring-code-300 focus:border-code-300 max-h-[300px] min-h-[100px] rounded-md border px-3 py-2 ring-2 ring-transparent transition-shadow outline-none"
+                  id="folder-description"
+                  placeholder="Folder description"
+                  value={updateDetails.folder_description}
+                  onChange={(e) =>
+                    setUpdateDetails(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          folder_description: e.target.value,
+                        }) as UpdateFolderDetailsType,
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <GlossyButton
+                content={
+                  <span className="grid h-7 place-items-center px-4">
+                    Cancel
+                  </span>
+                }
+                onClick={() => setUpdateDetails(null)}
+              />
+              <GlossyButton
+                content={
+                  <span className="grid h-7 min-w-20 place-items-center px-4">
+                    {updatingFolderDetails ? (
+                      <span className="loading loading-spinner loading-xs opacity-80"></span>
+                    ) : (
+                      <span>Update</span>
+                    )}
+                  </span>
+                }
+                onClick={() => {
+                  if (updatingFolderDetails) return;
+                  updateFolderDetails({
+                    folder_name: updateDetails.folder_name,
+                    folder_description: updateDetails.folder_description,
+                    folder_id: updateDetails.folder_id,
+                  });
+                }}
+              />
+            </div>
+          </Modal>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {folderDeleteDetails && (
+          <DeleteModal
+            title="Delete this folder!"
+            description={
+              <span className="font-light tracking-wide">
+                Permanently delete the{' '}
+                <span className="font-medium">
+                  '{folderDeleteDetails.folder_name || 'Unknown'}'
+                </span>{' '}
+                folder? This action{' '}
+                <span className="font-medium">is irreversible</span> and will
+                remove all code blocks inside it.
+              </span>
+            }
+            cancelFn={() => setFolderDeleteDetails(null)}
+            clickFn={() => deleteFolder(folderDeleteDetails)}
+            isLoading={deletingFolder}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

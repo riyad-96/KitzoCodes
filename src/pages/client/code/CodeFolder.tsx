@@ -8,21 +8,15 @@ import CodeBlockView from './CodeBlockView';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import DeleteModal from '../../../components/ui/DeleteModal';
 import { useCodeContext } from '../../../contexts/CodeContext';
+import Modal from '../../../components/ui/Modal';
+import { FileBracesCornerIcon, PencilLineIcon } from 'lucide-react';
+import { Tooltip } from 'kitzo/react';
 
 // types
 import type { CodeFolder } from '../../../types/types';
 import type { AxiosError } from 'axios';
 import type { EditorValuesType, EditorUpdateValuesType } from './types/types';
-import { FileBracesCornerIcon, PencilLineIcon } from 'lucide-react';
-import { Tooltip } from 'kitzo/react';
-import { useState } from 'react';
-import Modal from '../../../components/ui/Modal';
-
-type UpdateFolderDetailsType = {
-  folder_id: string;
-  folder_name: string;
-  folder_description: string;
-};
+import type { UpdateFolderDetailsType } from '../../../contexts/CodeContext';
 
 export default function CodeFolder() {
   const { user } = useAuthContext();
@@ -47,22 +41,13 @@ export default function CodeFolder() {
     enabled: !!user,
   });
 
-  // update folder name & description
-  const [updateDetails, setUpdateDetails] =
-    useState<UpdateFolderDetailsType | null>(null);
-  const { mutate: updateFolderDetails, isPending: updatingFolderDetails } =
-    useMutation({
-      mutationFn: async (value: UpdateFolderDetailsType) => {
-        const response = await server.patch('/codefolder/update', value);
-        return response.data;
-      },
-      onSuccess: () => {
-        setUpdateDetails(null);
-        queryClient.invalidateQueries({
-          queryKey: ['code_folder', codeFolderId],
-        });
-      },
-    });
+  // udpate folder details
+  const {
+    updateDetails,
+    setUpdateDetails,
+    updatingFolderDetails,
+    updateFolderDetails,
+  } = useCodeContext();
 
   // add new code block
   const { mutate: addNewCodeBlock, isPending: isAddingCodeBlock } = useMutation(

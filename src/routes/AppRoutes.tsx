@@ -21,7 +21,11 @@ const AppRoutes = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <ClientLayout />,
+        element: (
+          <CodeContext>
+            <ClientLayout />
+          </CodeContext>
+        ),
         children: [
           {
             path: '',
@@ -29,15 +33,7 @@ const AppRoutes = createBrowserRouter([
           },
           {
             path: 'code/:id',
-            element: (
-              <ProtectedPageWrapper
-                children={
-                  <CodeContext>
-                    <CodeFolder />
-                  </CodeContext>
-                }
-              />
-            ),
+            element: <ProtectedPageWrapper children={<CodeFolder />} />,
           },
         ],
       },

@@ -7,7 +7,7 @@ type DeleteModalPropsType = {
   description: ReactNode;
   cancelFn: () => void;
   clickFn: () => void;
-  isLoading?: boolean;
+  isLoading: boolean;
 };
 
 export default function DeleteModal({
@@ -45,7 +45,10 @@ export default function DeleteModal({
               )}
             </span>
           }
-          onClick={clickFn}
+          onClick={() => {
+            if (isLoading) return;
+            clickFn();
+          }}
         />
       </div>
     </Modal>

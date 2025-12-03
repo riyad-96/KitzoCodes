@@ -1,18 +1,42 @@
-import { EllipsisIcon, FileBracesCornerIcon } from 'lucide-react';
+import {
+  EllipsisIcon,
+  FileBracesCornerIcon,
+  PencilLineIcon,
+  Trash2Icon,
+  X,
+} from 'lucide-react';
 import type { CodeFolder } from '../../../types/types';
 import { Tooltip } from 'kitzo/react';
 import { useNavigate } from 'react-router-dom';
 import FormatedDate from './components/FormatedDate';
+import { motion, AnimatePresence } from 'motion/react';
+import { useState } from 'react';
+import useDropdownClose from '../../../hooks/useDropdownClose';
+import { useCodeContext } from '../../../contexts/CodeContext';
 
 type EachCodeFolderCard = {
+  i: number;
   folder: CodeFolder;
 };
 
-export default function EachCodeFolderCard({ folder }: EachCodeFolderCard) {
+export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
   const { _id, code_blocks, folder_name, folder_description, updated_at } =
     folder;
 
   const navigate = useNavigate();
+
+  const [dropdownShowing, setDropdownShowing] = useState(false);
+
+  const dropDownRef = useDropdownClose({
+    ignoredElement: `.dropdown-close-btn-${i}`,
+    isOpen: dropdownShowing,
+    onClose: () => setDropdownShowing(false),
+  });
+
+  // update folder details
+  const { setUpdateDetails, setFolderDeleteDetails } = useCodeContext();
+
+  // delete folder
 
   return (
     <div className="bg-code ring-code-200 border-code-100 pointer-fine:hover:border-code-200 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] cursor-default grid-rows-[1fr_auto] overflow-hidden rounded-2xl border px-4 py-3 ring-0 transition-shadow duration-150 pointer-fine:hover:ring-3">
@@ -23,15 +47,77 @@ export default function EachCodeFolderCard({ folder }: EachCodeFolderCard) {
 
       <div className="absolute top-2 right-2 z-3">
         <Tooltip
-          content="Menu"
+          content={dropdownShowing ? 'Close' : 'Menu'}
           tooltipOptions={{
             position: 'left',
           }}
+          animation={{
+            startDelay: 600,
+          }}
         >
-          <button className="bg-code-50 border-code-100 inset-shadow-code grid size-8 place-items-center rounded-lg border shadow-xs inset-shadow-2xs active:transform-[scale(0.96)]">
-            <EllipsisIcon size="18" />
+          <button
+            onClick={() => {
+              if (dropdownShowing) {
+                setDropdownShowing(false);
+                return;
+              }
+              setDropdownShowing(true);
+            }}
+            className={`dropdown-close-btn-${i} bg-code-50 border-code-100 inset-shadow-code grid size-8 place-items-center rounded-lg border shadow-xs inset-shadow-2xs active:transform-[scale(0.96)]`}
+          >
+            <span className="pointer-events-none">
+              {dropdownShowing ? <X size="18" /> : <EllipsisIcon size="18" />}
+            </span>
           </button>
         </Tooltip>
+
+        <AnimatePresence>
+          {dropdownShowing && (
+            <motion.div
+              ref={dropDownRef}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.1 }}
+              className="absolute top-[calc(100%+5px)] right-0 origin-top-right"
+            >
+              <div className="border-code-50 bg-code grid rounded-lg border py-1 text-sm shadow-xs">
+                <button
+                  onClick={() => {
+                    setUpdateDetails({
+                      folder_id: _id,
+                      folder_name: folder_name,
+                      folder_description: folder_description,
+                    });
+                    setDropdownShowing(false);
+                  }}
+                  className="hover:bg-code-50 flex items-center justify-start gap-2 px-3 py-1.5"
+                >
+                  <span>
+                    <PencilLineIcon size="14" />
+                  </span>
+                  <span>Edit</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setFolderDeleteDetails({
+                      folder_id: _id,
+                      folder_name: folder_name,
+                    });
+                    setDropdownShowing(false);
+                  }}
+                  className="hover:bg-code-50 flex items-center justify-start gap-2 px-3 py-1.5"
+                >
+                  <span>
+                    <Trash2Icon size="14" />
+                  </span>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="mb-4 space-y-2">
