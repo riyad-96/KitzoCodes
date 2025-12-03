@@ -156,7 +156,13 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
       </div>
 
       <div className="relative z-1 flex w-fit gap-1">
-        <Tooltip content="Updated on" animation={{ delay: 40 }}>
+        <Tooltip
+          content="Updated on"
+          animation={{ delay: 40 }}
+          tooltipOptions={{
+            hideOnTouch: false,
+          }}
+        >
           <FormatedDate
             className="bg-code-50 border-code-100 inset-shadow-code border shadow-xs inset-shadow-2xs"
             time={updated_at}
@@ -166,6 +172,9 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
         <Tooltip
           content={`${code_blocks.length} Blocks`}
           animation={{ delay: 40 }}
+          tooltipOptions={{
+            hideOnTouch: false,
+          }}
         >
           <div className="bg-code-50 border-code-100 inset-shadow-code relative z-2 flex w-fit cursor-default items-center gap-1 rounded-lg border px-2 py-1 text-xs shadow-xs inset-shadow-2xs">
             <span>

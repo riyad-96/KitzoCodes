@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import GlossyButton from '../../../components/ui/GlossyButton';
 import Modal from '../../../components/ui/Modal';
 
@@ -28,7 +28,6 @@ export default function EditorModal({
 }: EditorModalProps) {
   const { editDetails } = useCodeContext();
   const { addNewCodeBlock, updateCodeBlock } = actions;
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [values, setValues] = useState<EditorValuesType>(() => {
     if (editorState === 'update') {
@@ -48,10 +47,6 @@ export default function EditorModal({
       theme: 'coy',
     };
   });
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   function getDefaultLanguage() {
     const defaultLanguage = supportedLanguages.find(
@@ -83,7 +78,6 @@ export default function EditorModal({
           </label>
           <input
             id="block-title"
-            ref={inputRef}
             type="text"
             placeholder="Block title"
             value={values.title}
