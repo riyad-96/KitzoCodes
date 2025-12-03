@@ -18,6 +18,7 @@ import { getStyle, supportedThemes } from './utils/editorStyle';
 import { supportedLanguages } from './utils/editorLanguage';
 import CodeBlockViewLoader from './components/CodeBlockViewLoader';
 import { useCodeContext } from '../../../contexts/CodeContext';
+import FormatedDate from '../home/components/FormatedDate';
 
 type CodeBlockViewProps = {
   codeBlockId: string;
@@ -42,7 +43,7 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
   }
 
   return (
-    <div className="border-code-100 bg-code rounded-2xl border px-3 py-4 shadow">
+    <div className="border-code-100 bg-code rounded-2xl border px-3 pt-4 pb-3 shadow">
       <div className="mb-3 pl-2">
         <h3 className="text-code-800 text-lg font-medium md:text-xl">
           {data?.title ? (
@@ -62,7 +63,7 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-3 py-2">
+      <div className="flex flex-wrap items-center justify-end gap-3 pt-2 pb-3">
         <div className="flex items-center gap-1">
           <Tooltip content="Language">
             <span className="bg-code-50 border-code-100 inset-shadow-code grid h-7 cursor-default place-items-center rounded-full border px-3 text-sm shadow-xs inset-shadow-2xs">
@@ -146,6 +147,16 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
           }}
           showLineNumbers={true}
         />
+      </div>
+
+      <div className="pt-3">
+        <div className="flex items-center gap-1 pl-2">
+          <span className="text-sm">Updated:</span>
+          <FormatedDate
+            className="bg-code-50 shadow-xs"
+            time={data?.updated_at as string}
+          />
+        </div>
       </div>
     </div>
   );

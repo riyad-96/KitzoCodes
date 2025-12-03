@@ -51,7 +51,7 @@ export default function Home() {
       ) : (
         <div className="mt-16 grid gap-2 sm:grid-cols-2 md:mt-26 lg:grid-cols-3 xl:grid-cols-4">
           <div
-            className={`pointer-fine:hover:text-code-600 pointer-fine:hover:border-code-500 text-code-300 border-code-150 relative grid h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] place-items-center overflow-hidden rounded-2xl border-2 bg-transparent select-none`}
+            className={`pointer-fine:hover:text-code-600 pointer-fine:hover:border-code-500 text-code-300 border-code-150 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] place-items-center overflow-hidden rounded-2xl border-2 bg-transparent select-none`}
           >
             {isPending ? (
               <span className="loading loading-spinner loading-xl opacity-80"></span>
