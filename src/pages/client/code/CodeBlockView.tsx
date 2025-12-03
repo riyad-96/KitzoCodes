@@ -1,16 +1,8 @@
 import type { CodeBlock } from '../../../types/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAxios } from '../../../hooks/axios.hook';
-
-// syntax highlighting
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import GlossyButton from '../../../components/ui/GlossyButton';
-import {
-  CopyCheckIcon,
-  CopyIcon,
-  PencilLineIcon,
-  Trash2Icon,
-} from 'lucide-react';
+import { CheckIcon, CopyIcon, PencilLineIcon, Trash2Icon } from 'lucide-react';
 import kitzo from 'kitzo';
 import { Tooltip } from 'kitzo/react';
 import { useState } from 'react';
@@ -19,6 +11,10 @@ import { supportedLanguages } from './utils/editorLanguage';
 import CodeBlockViewLoader from './components/CodeBlockViewLoader';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import FormatedDate from '../home/components/FormatedDate';
+import { AnimatePresence, motion } from 'motion/react';
+
+// syntax highlighting
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 type CodeBlockViewProps = {
   codeBlockId: string;
@@ -128,12 +124,32 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
           <Tooltip content={copied ? 'Copied' : 'Copy'}>
             <GlossyButton
               content={
-                <span className="grid h-7 place-items-center px-3">
-                  {copied ? (
-                    <CopyCheckIcon size="16" />
-                  ) : (
-                    <CopyIcon size="16" />
-                  )}
+                <span className="relative grid h-7 w-10 place-items-center">
+                  <AnimatePresence mode="wait">
+                    {copied ? (
+                      <motion.span
+                        key="copyied-icon"
+                        initial={{ scaleX: 0.5, opacity: 0 }}
+                        animate={{ scaleX: 1, opacity: 1 }}
+                        exit={{ scaleX: 0.5, opacity: 0 }}
+                        transition={{ duration: 0.1 }}
+                        className="absolute"
+                      >
+                        <CheckIcon size="16" />
+                      </motion.span>
+                    ) : (
+                      <motion.span
+                        key="copy-icon"
+                        initial={{ scaleX: 0.5, opacity: 0 }}
+                        animate={{ scaleX: 1, opacity: 1 }}
+                        exit={{ scaleX: 0.5, opacity: 0 }}
+                        transition={{ duration: 0.1 }}
+                        className="absolute"
+                      >
+                        <CopyIcon size="16" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </span>
               }
               onClick={() => {

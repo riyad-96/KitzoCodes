@@ -39,7 +39,9 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
   // delete folder
 
   return (
-    <div className="bg-code ring-code-200 border-code-100 pointer-fine:hover:border-code-200 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] cursor-default grid-rows-[1fr_auto] overflow-hidden rounded-2xl border px-4 py-3 ring-0 transition-shadow duration-150 pointer-fine:hover:ring-3">
+    <div
+      className={`bg-code ring-code-200 border-code-100 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] cursor-default grid-rows-[1fr_auto] overflow-hidden rounded-2xl border px-4 py-3 ring-0 transition-shadow duration-150 ${dropdownShowing ? 'border-code-200 ring-3' : 'pointer-fine:hover:border-code-200 pointer-fine:hover:ring-2'}`}
+    >
       <button
         onClick={() => navigate(`/code/${_id}`)}
         className="absolute inset-0 z-1"
@@ -65,8 +67,32 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
             }}
             className={`dropdown-close-btn-${i} bg-code-50 border-code-100 inset-shadow-code grid size-8 place-items-center rounded-lg border shadow-xs inset-shadow-2xs active:transform-[scale(0.96)]`}
           >
-            <span className="pointer-events-none">
-              {dropdownShowing ? <X size="18" /> : <EllipsisIcon size="18" />}
+            <span className="pointer-events-none relative grid size-full place-items-center overflow-hidden rounded-md">
+              <AnimatePresence mode="wait">
+                {dropdownShowing ? (
+                  <motion.span
+                    key="x-icon"
+                    initial={{ scaleY: 0.5, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 1 }}
+                    exit={{ scaleY: 0.5, opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    className="absolute"
+                  >
+                    <X size="18" />
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="ellipsis-icon"
+                    initial={{ scaleX: 0.5, opacity: 1 }}
+                    animate={{ scaleX: 1, opacity: 1 }}
+                    exit={{ scaleX: 0.5, opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    className="absolute"
+                  >
+                    <EllipsisIcon size="18" />
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </span>
           </button>
         </Tooltip>
@@ -121,10 +147,10 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
       </div>
 
       <div className="mb-4 space-y-2">
-        <h3 className="text-code-500 line-clamp-2 max-w-8/10 text-xl font-semibold">
+        <h3 className="text-code-600 line-clamp-2 max-w-8/10 text-xl font-semibold">
           {folder_name || 'Unknown'}
         </h3>
-        <p className="text-code-700 line-clamp-2">
+        <p className="text-code-700 line-clamp-2 sm:line-clamp-3 lg:line-clamp-4">
           {folder_description || 'Click to view folder content'}
         </p>
       </div>

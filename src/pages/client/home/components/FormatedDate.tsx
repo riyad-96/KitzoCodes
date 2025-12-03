@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { Clock10Icon } from 'lucide-react';
 
 type FormatedDatePropsType = {
-  time: string | number;
+  time: string | number | Date;
   className?: string;
 };
 

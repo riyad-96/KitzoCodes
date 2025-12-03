@@ -8,8 +8,8 @@ export type CodeBlock = {
   code: string;
   language: string;
   theme: string;
-  created_at: number | string;
-  updated_at: number | string;
+  created_at: number | string | Date;
+  updated_at: number | string | Date;
 };
 
 export type CodeFolder = {
@@ -19,8 +19,8 @@ export type CodeFolder = {
   folder_name: string;
   folder_description: string;
   code_blocks: string[];
-  created_at: number | string;
-  updated_at: number | string;
+  created_at: number | string | Date;
+  updated_at: number | string | Date;
 };
 
 export type ClientCodeFolderPostType = Omit<

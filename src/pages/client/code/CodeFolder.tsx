@@ -130,7 +130,7 @@ export default function CodeFolder() {
   return (
     <div className="pt-8">
       <div className="flex gap-2">
-        <div className="max-w-[520px] flex-1 space-y-2">
+        <div className="max-w-[520px] space-y-2">
           <h2 className="text-code-800 max-w-8/10 text-xl font-semibold">
             {codeFolder?.folder_name || 'Unknown folder name'}
           </h2>

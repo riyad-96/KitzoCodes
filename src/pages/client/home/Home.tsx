@@ -11,6 +11,12 @@ import { useCodeContext } from '../../../contexts/CodeContext';
 import type { UpdateFolderDetailsType } from '../../../contexts/CodeContext';
 import GlossyButton from '../../../components/ui/GlossyButton';
 import DeleteModal from '../../../components/ui/DeleteModal';
+import { useState } from 'react';
+
+type AddFolderDetailsType = {
+  folder_name: string;
+  folder_description: string;
+};
 
 export default function Home() {
   const server = useAxios();
@@ -28,21 +34,26 @@ export default function Home() {
     enabled: !!user,
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
-      const response = await server.post('/codefolder/add');
-      return response.data;
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ['code_folders'],
-      });
-    },
-  });
+  // create new folder
+  const [addFolderDetails, setAddFolderDetails] =
+    useState<AddFolderDetailsType | null>(null);
 
-  const createCodeFolder = () => {
-    mutate();
-  };
+  const { mutate: createNewFolder, isPending: isNewFolderCreating } =
+    useMutation({
+      mutationFn: async (value: AddFolderDetailsType) => {
+        const response = await server.post('/codefolder/add', {
+          folder_name: value.folder_name,
+          folder_description: value.folder_description,
+        });
+        return response.data;
+      },
+      onSuccess() {
+        setAddFolderDetails(null);
+        queryClient.invalidateQueries({
+          queryKey: ['code_folders'],
+        });
+      },
+    });
 
   // update folder
   const {
@@ -67,11 +78,11 @@ export default function Home() {
           <span className="loading loading-spinner loading-xl opacity-80"></span>
         </div>
       ) : (
-        <div className="mt-16 grid gap-3 sm:grid-cols-2 md:mt-26 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-16 lg:grid-cols-3 xl:grid-cols-4">
           <div
-            className={`text-code-400 hover:text-code-600 bg-code border-code-100 ring-code-200 pointer-fine:hover:border-code-200 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] place-items-center overflow-hidden rounded-2xl border ring-0 transition-[color,box-shadow] duration-150 select-none pointer-fine:hover:ring-3`}
+            className={`text-code-400 hover:text-code-600 bg-code border-code-100 ring-code-200 pointer-fine:hover:border-code-200 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] place-items-center overflow-hidden rounded-2xl border ring-0 transition-[color,box-shadow] duration-150 select-none pointer-fine:hover:ring-2`}
           >
-            {isPending ? (
+            {isNewFolderCreating ? (
               <span className="loading loading-spinner loading-xl opacity-80"></span>
             ) : (
               <>
@@ -87,7 +98,10 @@ export default function Home() {
                       navigate('/auth/login');
                       return;
                     }
-                    createCodeFolder();
+                    setAddFolderDetails({
+                      folder_name: '',
+                      folder_description: '',
+                    });
                   }}
                   className="absolute inset-0"
                 ></button>
@@ -101,6 +115,7 @@ export default function Home() {
         </div>
       )}
 
+      {/* Update Modal */}
       <AnimatePresence>
         {updateDetails && (
           <Modal
@@ -176,6 +191,89 @@ export default function Home() {
                     folder_name: updateDetails.folder_name,
                     folder_description: updateDetails.folder_description,
                     folder_id: updateDetails.folder_id,
+                  });
+                }}
+              />
+            </div>
+          </Modal>
+        )}
+      </AnimatePresence>
+
+      {/* New folder data Modal */}
+      <AnimatePresence>
+        {addFolderDetails && (
+          <Modal
+            className="w-full max-w-[500px] rounded-2xl bg-white p-4"
+            onMouseDown={() => setAddFolderDetails(null)}
+          >
+            <div className="mb-4 space-y-2">
+              <div className="grid gap-1">
+                <label className="w-fit" htmlFor="folder-title">
+                  Name
+                </label>
+                <input
+                  className="border-code-150 focus:ring-code-300 focus:border-code-300 rounded-md border px-3 py-2 ring-2 ring-transparent transition-shadow outline-none"
+                  id="folder-title"
+                  type="text"
+                  placeholder="Folder name"
+                  value={addFolderDetails.folder_name}
+                  onChange={(e) =>
+                    setAddFolderDetails(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          folder_name: e.target.value,
+                        }) as AddFolderDetailsType,
+                    )
+                  }
+                />
+              </div>
+
+              <div className="grid gap-1">
+                <label className="w-fit" htmlFor="folder-description">
+                  Description
+                </label>
+                <textarea
+                  className="border-code-150 focus:ring-code-300 focus:border-code-300 max-h-[300px] min-h-[100px] rounded-md border px-3 py-2 ring-2 ring-transparent transition-shadow outline-none"
+                  id="folder-description"
+                  placeholder="Folder description"
+                  value={addFolderDetails.folder_description}
+                  onChange={(e) =>
+                    setAddFolderDetails(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          folder_description: e.target.value,
+                        }) as AddFolderDetailsType,
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <GlossyButton
+                content={
+                  <span className="grid h-7 place-items-center px-4">
+                    Cancel
+                  </span>
+                }
+                onClick={() => setAddFolderDetails(null)}
+              />
+              <GlossyButton
+                content={
+                  <span className="grid h-7 min-w-20 place-items-center px-4">
+                    {isNewFolderCreating ? (
+                      <span className="loading loading-spinner loading-xs opacity-80"></span>
+                    ) : (
+                      <span>Create</span>
+                    )}
+                  </span>
+                }
+                onClick={() => {
+                  if (isNewFolderCreating) return;
+                  createNewFolder({
+                    folder_name: addFolderDetails.folder_name,
+                    folder_description: addFolderDetails.folder_description,
                   });
                 }}
               />
