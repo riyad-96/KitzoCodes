@@ -8,6 +8,22 @@ import {
   coy,
   solarizedlight,
   materialLight,
+  atomDark,
+  base16AteliersulphurpoolLight,
+  coldarkCold,
+  coldarkDark,
+  gruvboxDark,
+  gruvboxLight,
+  materialDark,
+  materialOceanic,
+  nord,
+  oneDark,
+  oneLight,
+  prism,
+  solarizedDarkAtom,
+  tomorrow,
+  twilight,
+  vscDarkPlus,
 } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 type SupportedThmesType = {
@@ -17,13 +33,41 @@ type SupportedThmesType = {
 };
 
 export const supportedThemes: SupportedThmesType[] = [
-  { name: 'Coy', value: 'coy', import: coy },
-  { name: 'Solarized Light', value: 'solarizedLight', import: solarizedlight },
-  { name: 'Material Light', value: 'materialLight', import: materialLight },
   { name: 'Dracula', value: 'dracula', import: dracula },
-  { name: 'Okaidia', value: 'okaidia', import: okaidia },
-  { name: 'Night Owl', value: 'nightOwl', import: nightOwl },
+  { name: 'Atom Dark', value: 'atomDark', import: atomDark },
+  { name: 'Coy', value: 'coy', import: coy },
   { name: 'Darcula', value: 'darcula', import: darcula },
+  { name: 'Material Dark', value: 'materialDark', import: materialDark },
+  { name: 'Material Light', value: 'materialLight', import: materialLight },
+  { name: 'Okaidia', value: 'okaidia', import: okaidia },
+  { name: 'One Dark', value: 'oneDark', import: oneDark },
+  { name: 'One Light', value: 'oneLight', import: oneLight },
+  { name: 'Night Owl', value: 'nightOwl', import: nightOwl },
+  {
+    name: 'Base16 Atelier Sulphurpool Light',
+    value: 'base16AteliersulphurpoolLight',
+    import: base16AteliersulphurpoolLight,
+  },
+  { name: 'Coldark Cold', value: 'coldarkCold', import: coldarkCold },
+  { name: 'Coldark Dark', value: 'coldarkDark', import: coldarkDark },
+  { name: 'Gruvbox Dark', value: 'gruvboxDark', import: gruvboxDark },
+  { name: 'Gruvbox Light', value: 'gruvboxLight', import: gruvboxLight },
+  {
+    name: 'Material Oceanic',
+    value: 'materialOceanic',
+    import: materialOceanic,
+  },
+  { name: 'Nord', value: 'nord', import: nord },
+  { name: 'Prism', value: 'prism', import: prism },
+  {
+    name: 'Solarized Dark Atom',
+    value: 'solarizedDarkAtom',
+    import: solarizedDarkAtom,
+  },
+  { name: 'Solarized Light', value: 'solarizedlight', import: solarizedlight },
+  { name: 'Tomorrow', value: 'tomorrow', import: tomorrow },
+  { name: 'Twilight', value: 'twilight', import: twilight },
+  { name: 'VSC Dark Plus', value: 'vscDarkPlus', import: vscDarkPlus },
 ];
 
 export type PrismTheme = { [key: string]: CSSProperties };

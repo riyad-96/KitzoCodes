@@ -169,6 +169,7 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
           style={getStyle(data?.theme)}
           language={data?.language}
           customStyle={{
+            fontSize: 'clamp(0.875rem, 0.8333rem + 0.1852vw, 1rem)',
             padding: '0.625rem 1rem',
             margin: 0,
             minHeight: 40,
