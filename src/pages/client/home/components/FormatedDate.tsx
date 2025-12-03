@@ -17,7 +17,7 @@ export default function FormatedDate({
       <span>
         <Clock10Icon size="14" />
       </span>
-      <span>{format(time, 'd, MMM y • h:mm a')}</span>
+      <span>{format(time, 'h:mm a • d MMM y ')}</span>
     </div>
   );
 }

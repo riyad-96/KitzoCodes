@@ -77,30 +77,42 @@ export default function EditorModal({
       className="bg-code w-full max-w-[700px] space-y-2 rounded-2xl p-4 shadow-md"
     >
       <div className="grid gap-2">
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Block title"
-          value={values.title}
-          onChange={(e) =>
-            setValues((prev) => ({ ...prev, title: e.target.value }))
-          }
-          className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none"
-        />
-        <textarea
-          value={values.description}
-          onChange={(e) =>
-            setValues((prev) => ({ ...prev, description: e.target.value }))
-          }
-          className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 max-h-[150px] min-h-[38px] rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none"
-          placeholder="Block description"
-        />
+        <div className="grid gap-1">
+          <label className="w-fit pl-1" htmlFor="block-title">
+            Title
+          </label>
+          <input
+            id="block-title"
+            ref={inputRef}
+            type="text"
+            placeholder="Block title"
+            value={values.title}
+            onChange={(e) =>
+              setValues((prev) => ({ ...prev, title: e.target.value }))
+            }
+            className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none"
+          />
+        </div>
+        <div className="grid gap-1">
+          <label className="w-fit pl-1" htmlFor="block-description">
+            Description
+          </label>
+          <textarea
+            id="block-description"
+            value={values.description}
+            onChange={(e) =>
+              setValues((prev) => ({ ...prev, description: e.target.value }))
+            }
+            className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 max-h-[150px] min-h-[38px] rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none"
+            placeholder="Block description"
+          />
+        </div>
       </div>
 
       <div className="relative grid gap-2">
         <div className="grid gap-2 sm:flex sm:items-center sm:justify-end">
           <div className="flex items-center gap-2">
-            <span className="max-sm:flex-1">Language</span>
+            <span className="max-sm:flex-1 max-sm:pl-1">Language</span>
             <Select
               id="language"
               className="min-w-[130px] text-sm max-sm:flex-2"
@@ -118,7 +130,7 @@ export default function EditorModal({
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="max-sm:flex-1">Theme</span>
+            <span className="max-sm:flex-1 max-sm:pl-1">Theme</span>
             <Select
               id="language"
               className="min-w-[130px] text-sm max-sm:flex-2"

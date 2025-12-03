@@ -13,7 +13,7 @@ import { useCodeContext } from '../../../contexts/CodeContext';
 import type { CodeFolder } from '../../../types/types';
 import type { AxiosError } from 'axios';
 import type { EditorValuesType, EditorUpdateValuesType } from './types/types';
-import { PencilLineIcon } from 'lucide-react';
+import { FileBracesCornerIcon, PencilLineIcon } from 'lucide-react';
 import { Tooltip } from 'kitzo/react';
 import { useState } from 'react';
 import Modal from '../../../components/ui/Modal';
@@ -50,22 +50,19 @@ export default function CodeFolder() {
   // update folder name & description
   const [updateDetails, setUpdateDetails] =
     useState<UpdateFolderDetailsType | null>(null);
-  const {
-    mutate: updateFolderDetails,
-    isPending: updatingFolderDetails,
-    error: updateFolderError,
-  } = useMutation({
-    mutationFn: async (value: UpdateFolderDetailsType) => {
-      const response = await server.patch('/codefolder/update', value);
-      return response.data;
-    },
-    onSuccess: () => {
-      setUpdateDetails(null);
-      queryClient.invalidateQueries({
-        queryKey: ['code_folder', codeFolderId],
-      });
-    },
-  });
+  const { mutate: updateFolderDetails, isPending: updatingFolderDetails } =
+    useMutation({
+      mutationFn: async (value: UpdateFolderDetailsType) => {
+        const response = await server.patch('/codefolder/update', value);
+        return response.data;
+      },
+      onSuccess: () => {
+        setUpdateDetails(null);
+        queryClient.invalidateQueries({
+          queryKey: ['code_folder', codeFolderId],
+        });
+      },
+    });
 
   // add new code block
   const { mutate: addNewCodeBlock, isPending: isAddingCodeBlock } = useMutation(
@@ -148,7 +145,7 @@ export default function CodeFolder() {
   return (
     <div className="pt-8">
       <div className="flex gap-2">
-        <div className="max-w-[520px] space-y-2">
+        <div className="max-w-[520px] flex-1 space-y-2">
           <h2 className="text-code-800 max-w-8/10 text-xl font-semibold">
             {codeFolder?.folder_name || 'Unknown folder name'}
           </h2>
@@ -166,7 +163,6 @@ export default function CodeFolder() {
             }
             tooltipOptions={{
               position: 'left-start',
-              arrow: false,
             }}
             animation={{
               startDelay: 400,
@@ -190,11 +186,27 @@ export default function CodeFolder() {
         </div>
       </div>
 
-      <div className="my-4 flex justify-end">
-        <GlossyButton
-          content={<span className="bg-white px-6 py-2">Add Block</span>}
-          onClick={() => setEditorState('new')}
-        />
+      <div className="mt-4 mb-6 flex items-center justify-between">
+        <Tooltip
+          content={`${codeFolder?.code_blocks.length} Blocks`}
+          tooltipOptions={{
+            position: 'top-start',
+          }}
+          animation={{ delay: 40 }}
+        >
+          <div className="bg-code border-code-100 inset-shadow-code relative z-2 flex w-fit cursor-default items-center gap-1 rounded-lg border px-2 py-1 text-xs shadow-xs inset-shadow-2xs">
+            <span>
+              <FileBracesCornerIcon size="14" />
+            </span>
+            :<span>{codeFolder?.code_blocks.length}</span>
+          </div>
+        </Tooltip>
+        <div>
+          <GlossyButton
+            content={<span className="bg-white px-6 py-2">Add Block</span>}
+            onClick={() => setEditorState('new')}
+          />
+        </div>
       </div>
 
       {(codeFolder?.code_blocks?.length ?? 0 > 0) ? (
@@ -250,11 +262,14 @@ export default function CodeFolder() {
           >
             <div className="mb-4 space-y-2">
               <div className="grid gap-1">
-                <label htmlFor="folder-title">Name</label>
+                <label className="w-fit" htmlFor="folder-title">
+                  Name
+                </label>
                 <input
                   className="border-code-150 focus:ring-code-300 focus:border-code-300 rounded-md border px-3 py-2 ring-2 ring-transparent transition-shadow outline-none"
                   id="folder-title"
                   type="text"
+                  placeholder="Folder name"
                   value={updateDetails.folder_name}
                   onChange={(e) =>
                     setUpdateDetails(
@@ -269,10 +284,13 @@ export default function CodeFolder() {
               </div>
 
               <div className="grid gap-1">
-                <label htmlFor="folder-description">Description</label>
+                <label className="w-fit" htmlFor="folder-description">
+                  Description
+                </label>
                 <textarea
                   className="border-code-150 focus:ring-code-300 focus:border-code-300 max-h-[300px] min-h-[100px] rounded-md border px-3 py-2 ring-2 ring-transparent transition-shadow outline-none"
                   id="folder-description"
+                  placeholder="Folder description"
                   value={updateDetails.folder_description}
                   onChange={(e) =>
                     setUpdateDetails(

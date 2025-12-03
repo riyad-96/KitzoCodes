@@ -21,7 +21,7 @@ export default function InputField({
 
   return (
     <div className="grid gap-1">
-      <label className="pl-1" htmlFor={id}>
+      <label className="pl-1 w-fit" htmlFor={id}>
         {label}
       </label>
       <div className="relative">

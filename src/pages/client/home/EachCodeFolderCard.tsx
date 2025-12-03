@@ -15,7 +15,7 @@ export default function EachCodeFolderCard({ folder }: EachCodeFolderCard) {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-code-100 pointer-fine:hover:shadow-none pointer-fine:hover:border-code-200 inset-shadow-code-100 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] cursor-default grid-rows-[1fr_auto] overflow-hidden rounded-2xl border-2 border-transparent px-4 py-3 shadow inset-shadow-2xs">
+    <div className="bg-code ring-code-200 border-code-100 pointer-fine:hover:border-code-200 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] cursor-default grid-rows-[1fr_auto] overflow-hidden rounded-2xl border px-4 py-3 ring-0 transition-shadow duration-150 pointer-fine:hover:ring-3">
       <button
         onClick={() => navigate(`/code/${_id}`)}
         className="absolute inset-0 z-1"
@@ -28,7 +28,7 @@ export default function EachCodeFolderCard({ folder }: EachCodeFolderCard) {
             position: 'left',
           }}
         >
-          <button className="bg-code-150 border-code-200 inset-shadow-code-100 grid size-8 place-items-center rounded-lg border inset-shadow-2xs active:transform-[scale(0.96)]">
+          <button className="bg-code-50 border-code-100 inset-shadow-code grid size-8 place-items-center rounded-lg border shadow-xs inset-shadow-2xs active:transform-[scale(0.96)]">
             <EllipsisIcon size="18" />
           </button>
         </Tooltip>
@@ -45,14 +45,17 @@ export default function EachCodeFolderCard({ folder }: EachCodeFolderCard) {
 
       <div className="relative z-1 flex w-fit gap-1">
         <Tooltip content="Updated on" animation={{ delay: 40 }}>
-          <FormatedDate className="bg-code-50 shadow-xs" time={updated_at} />
+          <FormatedDate
+            className="bg-code-50 border-code-100 inset-shadow-code border shadow-xs inset-shadow-2xs"
+            time={updated_at}
+          />
         </Tooltip>
 
         <Tooltip
           content={`${code_blocks.length} Blocks`}
           animation={{ delay: 40 }}
         >
-          <div className="bg-code-50 relative z-2 flex w-fit cursor-default items-center gap-1 rounded-lg px-2 py-1 text-xs shadow-xs">
+          <div className="bg-code-50 border-code-100 inset-shadow-code relative z-2 flex w-fit cursor-default items-center gap-1 rounded-lg border px-2 py-1 text-xs shadow-xs inset-shadow-2xs">
             <span>
               <FileBracesCornerIcon size="14" />
             </span>

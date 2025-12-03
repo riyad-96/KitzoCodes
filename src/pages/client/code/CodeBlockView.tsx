@@ -43,7 +43,22 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
   }
 
   return (
-    <div className="border-code-100 bg-code rounded-2xl border px-3 pt-4 pb-3 shadow">
+    <div className="border-code-100 bg-code relative rounded-2xl border px-3 pt-4 pb-3 shadow">
+      <div className="absolute top-0 right-4 -translate-y-1/3">
+        <Tooltip
+          content="Created on"
+          tooltipOptions={{
+            position: 'bottom',
+            hideOnTouch: false,
+          }}
+        >
+          <FormatedDate
+            className="bg-code-50 border-code-100 inset-shadow-code border shadow-xs inset-shadow-2xs"
+            time={data?.created_at as string}
+          />
+        </Tooltip>
+      </div>
+
       <div className="mb-3 pl-2">
         <h3 className="text-code-800 text-lg font-medium md:text-xl">
           {data?.title ? (
