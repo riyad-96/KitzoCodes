@@ -1,14 +1,37 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/header/Logo';
 import { GoogleIcon } from '../assets/Svgs';
+import { toast } from 'kitzo/react';
+import CustomToast from '../pages/auth/CustomToast';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../configs/firebase.config';
+import { useState } from 'react';
 
 export default function AuthLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage = location.pathname.includes('login');
 
+  const [trying, setTrying] = useState<boolean>(false);
+
+  async function googleSignIn() {
+    setTrying(true);
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error(err);
+      toast.custom(<CustomToast text="Login failed" />);
+    } finally {
+      setTrying(false);
+    }
+  }
+
   return (
     <div className="grid h-dvh place-items-center overflow-y-auto p-4 pt-16 pb-26">
+      {trying && (
+        <div className="fixed inset-0 z-20 cursor-not-allowed bg-white/30"></div>
+      )}
+
       <div className="fixed top-4 left-4">
         <Logo onClick={() => navigate('/')} />
       </div>
@@ -17,7 +40,10 @@ export default function AuthLayout() {
         <Outlet />
         <div className="mt-2 grid gap-2">
           <span className="text-center">or</span>
-          <button className="keyboard-focus-effect bg-code-900 text-code-50 flex h-10 items-center justify-center gap-1 rounded-full tracking-wide">
+          <button
+            onClick={googleSignIn}
+            className="keyboard-focus-effect bg-code-900 text-code-50 flex h-10 items-center justify-center gap-1 rounded-full tracking-wide"
+          >
             <GoogleIcon size="20" />
             <span>Continue with google</span>
           </button>
@@ -30,7 +56,7 @@ export default function AuthLayout() {
               : 'Already have an account?'}
           </span>
           <Link
-            className="text-blue-500 underline-offset-1 pointer-fine:hover:underline pointer-fine:hover:underline-offset-6 transition-[text-underline-offset]"
+            className="text-blue-500 underline-offset-1 transition-[text-underline-offset] pointer-fine:hover:underline pointer-fine:hover:underline-offset-6"
             to={isLoginPage ? '/auth/signup' : '/auth/login'}
             children={isLoginPage ? 'Signup' : 'Login'}
           />
