@@ -169,11 +169,10 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
           style={getStyle(data?.theme)}
           language={data?.language}
           customStyle={{
-            paddingBlock: '1rem',
-            paddingInlineEnd: '1rem',
+            padding: '0.625rem 1rem',
             margin: 0,
             minHeight: 40,
-            maxHeight: 500,
+            maxHeight: 450,
             borderRadius: '0.5rem',
           }}
           showLineNumbers={true}
