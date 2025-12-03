@@ -4,7 +4,7 @@ import Modal from '../../../components/ui/Modal';
 
 import Select from 'react-select';
 import { supportedLanguages } from './utils/editorLanguage';
-import { supportedThemes } from './utils/editorStyle';
+import { groupedThemes, supportedThemes } from './utils/editorStyle';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import type { EditorUpdateValuesType, EditorValuesType } from './types/types';
 
@@ -135,10 +135,7 @@ export default function EditorModal({
                   theme: target?.value as string,
                 }))
               }
-              options={supportedThemes.map((t) => ({
-                label: t.name,
-                value: t.value,
-              }))}
+              options={groupedThemes}
             />
           </div>
         </div>

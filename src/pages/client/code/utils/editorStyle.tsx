@@ -70,6 +70,54 @@ export const supportedThemes: SupportedThmesType[] = [
   { name: 'VSC Dark Plus', value: 'vscDarkPlus', import: vscDarkPlus },
 ];
 
+export const groupedThemes = [
+  {
+    label: 'Light Themes',
+    options: [
+      { label: 'Coy', value: 'coy' },
+      { label: 'Material Light', value: 'materialLight' },
+      { label: 'One Light', value: 'oneLight' },
+      {
+        label: 'Base16 Atelier Sulphurpool Light',
+        value: 'base16AteliersulphurpoolLight',
+      },
+      { label: 'Coldark Cold', value: 'coldarkCold' },
+      { label: 'Gruvbox Light', value: 'gruvboxLight' },
+      {
+        label: 'Solarized Light',
+        value: 'solarizedlight',
+      },
+    ],
+  },
+  {
+    label: 'Dark Themes',
+    options: [
+      { label: 'Dracula', value: 'dracula' },
+      { label: 'Atom Dark', value: 'atomDark' },
+      { label: 'Darcula', value: 'darcula' },
+      { label: 'Material Dark', value: 'materialDark' },
+      { label: 'Okaidia', value: 'okaidia' },
+      { label: 'One Dark', value: 'oneDark' },
+      { label: 'Night Owl', value: 'nightOwl' },
+      { label: 'Coldark Dark', value: 'coldarkDark' },
+      { label: 'Gruvbox Dark', value: 'gruvboxDark' },
+      {
+        label: 'Material Oceanic',
+        value: 'materialOceanic',
+      },
+      { label: 'Nord', value: 'nord' },
+      { label: 'Prism', value: 'prism' },
+      {
+        label: 'Solarized Dark Atom',
+        value: 'solarizedDarkAtom',
+      },
+      { label: 'Tomorrow', value: 'tomorrow' },
+      { label: 'Twilight', value: 'twilight' },
+      { label: 'VSC Dark Plus', value: 'vscDarkPlus' },
+    ],
+  },
+];
+
 export type PrismTheme = { [key: string]: CSSProperties };
 
 export function getStyle(style: string | undefined): PrismTheme {
