@@ -18,6 +18,7 @@ export default function Signup() {
   const [signing, setSigning] = useState<boolean>(false);
 
   async function signup(data: EmailPassword) {
+    if (signing) return;
     setSigning(true);
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password);

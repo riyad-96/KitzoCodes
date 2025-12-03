@@ -18,6 +18,7 @@ export default function Login() {
   const [logging, setLogging] = useState<boolean>(false);
 
   async function login(data: EmailPassword) {
+    if (logging) return;
     setLogging(true);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
