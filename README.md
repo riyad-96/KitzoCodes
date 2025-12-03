@@ -1,73 +1,39 @@
-# React + TypeScript + Vite
+# 💻 KitzoCode
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application designed for developers to **store and organize code snippets** efficiently. Built with **React** and **TypeScript** on the frontend, and backed by a **MongoDB** database.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Code Organization:** Create **folders** to categorize your code snippets.
+- **Multiple Snippets:** Store **multiple code snippets** inside each folder.
+- **Syntax Highlighting:** Beautiful and accurate syntax highlighting for a **broad range of programming languages** using `react-syntax-highlighter`.
+- **Persistent Storage:** Data is securely stored using **MongoDB**.
 
-## React Compiler
+---
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+### Frontend ⚛️
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The frontend is built using **React** and **TypeScript** for a robust and scalable user interface.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Category                | Key Technologies                                              | Purpose/Use                                                                                   |
+| :---------------------- | :------------------------------------------------------------ | :-------------------------------------------------------------------------------------------- |
+| **Core**                | **React**, **TypeScript**                                     | Primary library for building the UI.                                                          |
+| **Data Fetching**       | **@tanstack/react-query**, **Axios**                          | Managing server state, caching, and making HTTP requests.                                     |
+| **Routing**             | **react-router-dom**                                          | Handling navigation and application routing.                                                  |
+| **Styling/UI**          | **lucide-react**, **react-select**                            | Icons and enhanced form select fields.                                                        |
+| **Custom UI/Utilities** | **[kitzo](https://github.com/riyad-96/kitzo)** (Your Library) | Provides custom UI components, specifically used for **Tooltip** and **Toast Notifications**. |
+| **Form Management**     | **react-hook-form**                                           | Efficient and flexible form validation and state management.                                  |
+| **Code Display**        | **react-syntax-highlighter**, **prismjs**                     | Providing syntax highlighting for code snippets.                                              |
+| **Authentication**      | **firebase**                                                  | Client-side integration for user authentication/services.                                     |
+| **Animation**           | **motion**                                                    | Handling smooth and complex UI animations.                                                    |
+| **Utilities**           | **date-fns**                                                  | A comprehensive library for date handling.                                                    |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🌐 Live Demo
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Experience KitzoCode live and see how easy it is to manage your code snippets!
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Application Link:** [KitzoCodes](https://kitzocodes.vercel.app)
