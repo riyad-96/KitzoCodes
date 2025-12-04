@@ -96,7 +96,7 @@ export default function CodeBlockView({
         <div className="flex items-center gap-1">
           <motion.div
             className="relative z-5 rounded-full"
-            layoutId={`delete-code-block-modal-${block._id}`}
+            layoutId={`delete-modal_${block._id}`}
           >
             <Tooltip content="Delete!">
               <GlossyButton

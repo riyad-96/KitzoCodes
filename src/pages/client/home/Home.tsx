@@ -149,6 +149,7 @@ export default function Home() {
       <AnimatePresence>
         {updateDetails && (
           <Modal
+            layoutId={`update_modal_${updateDetails.folder_id}`}
             className="w-full max-w-[500px] rounded-2xl bg-white p-4"
             onMouseDown={() => setUpdateDetails(null)}
           >
@@ -328,6 +329,7 @@ export default function Home() {
       <AnimatePresence>
         {folderDeleteDetails && (
           <DeleteModal
+            layoutId={`delete-modal_${folderDeleteDetails.folder_id}`}
             title="Delete this folder!"
             description={
               <span className="font-light tracking-wide">

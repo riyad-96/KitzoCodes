@@ -3,7 +3,7 @@ import Modal from './Modal';
 import GlossyButton from './GlossyButton';
 
 type DeleteModalPropsType = {
-  id: string;
+  layoutId?: string;
   title: ReactNode;
   description: ReactNode;
   cancelFn: () => void;
@@ -12,7 +12,7 @@ type DeleteModalPropsType = {
 };
 
 export default function DeleteModal({
-  id,
+  layoutId,
   title,
   description,
   cancelFn,
@@ -21,7 +21,7 @@ export default function DeleteModal({
 }: DeleteModalPropsType) {
   return (
     <Modal
-      layoutId={`delete-code-block-modal-${id}`}
+      layoutId={layoutId}
       onMouseDown={cancelFn}
       className="bg-code w-full max-w-[450px] rounded-2xl p-4 shadow"
     >

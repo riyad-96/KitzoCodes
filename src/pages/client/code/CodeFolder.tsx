@@ -261,7 +261,7 @@ export default function CodeFolder() {
       <AnimatePresence>
         {deletingInfo && (
           <DeleteModal
-            id={deletingInfo.code_block_id}
+            layoutId={`delete-modal_${deletingInfo.code_block_id}`}
             title="Delete code block!"
             description={
               <span className="font-light tracking-wide">

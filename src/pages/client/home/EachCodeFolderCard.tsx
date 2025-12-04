@@ -28,7 +28,7 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
   const [dropdownShowing, setDropdownShowing] = useState(false);
 
   const dropDownRef = useDropdownClose({
-    ignoredElement: `.dropdown-close-btn-${i}`,
+    ignoredSelectors: [`.dropdown-close-btn-${i}`, '.uni-modal'],
     isOpen: dropdownShowing,
     onClose: () => setDropdownShowing(false),
   });
@@ -109,38 +109,46 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
               className="absolute top-[calc(100%+5px)] right-0 origin-top-right"
             >
               <div className="border-code-50 bg-code grid rounded-lg border py-1 text-sm shadow-xs">
-                <button
-                  onClick={() => {
-                    setUpdateDetails({
-                      folder_id: _id,
-                      folder_name: folder_name,
-                      folder_description: folder_description,
-                    });
-                    setDropdownShowing(false);
-                  }}
-                  className="hover:bg-code-50 flex items-center justify-start gap-2 px-3 py-1.5"
+                <motion.div
+                  layoutId={`update_modal_${_id}`}
+                  className="bg-code grid"
                 >
-                  <span>
-                    <PencilLineIcon size="14" />
-                  </span>
-                  <span>Edit</span>
-                </button>
+                  <button
+                    onClick={() => {
+                      setUpdateDetails({
+                        folder_id: _id,
+                        folder_name: folder_name,
+                        folder_description: folder_description,
+                      });
+                    }}
+                    className="hover:bg-code-50 flex items-center justify-start gap-2 px-3 py-1.5"
+                  >
+                    <span>
+                      <PencilLineIcon size="14" />
+                    </span>
+                    <span>Edit</span>
+                  </button>
+                </motion.div>
 
-                <button
-                  onClick={() => {
-                    setFolderDeleteDetails({
-                      folder_id: _id,
-                      folder_name: folder_name,
-                    });
-                    setDropdownShowing(false);
-                  }}
-                  className="hover:bg-code-50 flex items-center justify-start gap-2 px-3 py-1.5"
+                <motion.div
+                  className="bg-code grid"
+                  layoutId={`delete-modal_${_id}`}
                 >
-                  <span>
-                    <Trash2Icon size="14" />
-                  </span>
-                  <span>Delete</span>
-                </button>
+                  <button
+                    onClick={() => {
+                      setFolderDeleteDetails({
+                        folder_id: _id,
+                        folder_name: folder_name,
+                      });
+                    }}
+                    className="hover:bg-code-50 flex items-center justify-start gap-2 px-3 py-1.5"
+                  >
+                    <span>
+                      <Trash2Icon size="14" />
+                    </span>
+                    <span>Delete</span>
+                  </button>
+                </motion.div>
               </div>
             </motion.div>
           )}

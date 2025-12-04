@@ -3,13 +3,13 @@ import { useEffect, useRef } from 'react';
 type UseDropdownClosePropsType = {
   isOpen: boolean;
   onClose: () => void;
-  ignoredElement: string;
+  ignoredSelectors: string[];
 };
 
 export default function useDropdownClose({
   isOpen,
   onClose,
-  ignoredElement,
+  ignoredSelectors = [],
 }: UseDropdownClosePropsType) {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -19,13 +19,11 @@ export default function useDropdownClose({
     function handleClose(e: MouseEvent | TouchEvent) {
       const target = e.target as Node;
 
-      if (
+      const shouldIgnore =
         target instanceof Element &&
-        ignoredElement &&
-        target.closest(ignoredElement)
-      ) {
-        return;
-      }
+        ignoredSelectors.some((sel) => target.closest(sel));
+
+      if (shouldIgnore) return;
 
       if (ref.current && !ref.current.contains(target)) {
         onClose();
@@ -44,7 +42,7 @@ export default function useDropdownClose({
       document.removeEventListener('touchstart', handleClose);
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [isOpen, onClose, ignoredElement]);
+  }, [isOpen, onClose, ignoredSelectors]);
 
   return ref;
 }
