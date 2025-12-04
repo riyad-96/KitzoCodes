@@ -22,6 +22,7 @@ export default function Login() {
     setLogging(true);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
+      localStorage.setItem('visitor_state', 'old');
       toast.success('Login successful');
     } catch (err) {
       const error = err as FirebaseError;
@@ -46,7 +47,10 @@ export default function Login() {
         Welcome back!
       </h1>
 
-      <form onSubmit={handleSubmit(login)} className="grid gap-2">
+      <form
+        onSubmit={handleSubmit(login)}
+        className="grid gap-2"
+      >
         <InputField
           id="email"
           type="email"

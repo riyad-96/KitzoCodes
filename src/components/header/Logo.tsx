@@ -1,11 +1,17 @@
+import { motion } from 'motion/react';
+
 type LogoPropsTypes = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  layoutId?: string;
 };
 
-export default function Logo({ onClick }: LogoPropsTypes) {
+export default function Logo({ onClick, layoutId }: LogoPropsTypes) {
   return (
-    <div className="text-xl font-semibold md:text-2xl">
+    <motion.div
+      layoutId={layoutId}
+      className="text-xl font-semibold md:text-2xl"
+    >
       <button onClick={onClick}>KitzoCodes</button>
-    </div>
+    </motion.div>
   );
 }

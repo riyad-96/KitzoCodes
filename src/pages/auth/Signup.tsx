@@ -22,6 +22,7 @@ export default function Signup() {
     setSigning(true);
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password);
+      localStorage.setItem('visitor_state', 'old');
       toast.success('Registration successful');
     } catch (err) {
       const error = err as FirebaseError;
@@ -39,7 +40,10 @@ export default function Signup() {
         Create account!
       </h1>
 
-      <form onSubmit={handleSubmit(signup)} className="grid gap-2">
+      <form
+        onSubmit={handleSubmit(signup)}
+        className="grid gap-2"
+      >
         <InputField
           id="email"
           type="email"

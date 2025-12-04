@@ -18,6 +18,7 @@ export default function AuthLayout() {
     setTrying(true);
     try {
       await signInWithPopup(auth, googleProvider);
+      localStorage.setItem('visitor_state', 'old');
     } catch (err) {
       console.error(err);
       toast.custom(<CustomToast text="Login failed" />);
@@ -33,7 +34,10 @@ export default function AuthLayout() {
       )}
 
       <div className="fixed top-4 left-4">
-        <Logo onClick={() => navigate('/')} />
+        <Logo
+          layoutId="KitzoCodes-logo"
+          onClick={() => navigate('/')}
+        />
       </div>
 
       <div className="w-full max-w-[350px] md:max-w-[400px]">

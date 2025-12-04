@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAxios } from '../../../hooks/axios.hook';
-import { PlusIcon } from 'lucide-react';
+import { LogInIcon, PlusIcon } from 'lucide-react';
 import type { CodeFolder } from '../../../types/types';
 import EachCodeFolderCard from './EachCodeFolderCard';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import Modal from '../../../components/ui/Modal';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import type { UpdateFolderDetailsType } from '../../../contexts/CodeContext';
@@ -67,35 +67,61 @@ export default function Home() {
     deletingFolder,
   } = useCodeContext();
 
+  // visitor state check
+  const isOldVisitor = localStorage.getItem('visitor_state');
+
   return (
-    <div className="pt-4">
-      <h1 className="text-code-600 text-center text-[clamp(1.125rem,0.6302rem+1.0309vw,1.5rem)] font-semibold tracking-wide">
-        Save your Favorite Code Snippets
-      </h1>
+    <div className="pt-12">
+      <div className="space-y-2">
+        <h1 className="text-code-700 text-center text-[clamp(1.125rem,0.6302rem+1.0309vw,1.5rem)] font-semibold tracking-wide">
+          {user ? `Welcome Back` : 'Organize and Highlight Your Code'}
+        </h1>
+        <p className="text-code-650 mx-auto max-w-[360px] text-center text-[clamp(0.875rem,0.8271rem+0.2128vw,1rem)]">
+          {user
+            ? 'Continue organizing your code snippets and explore your saved folders'
+            : 'Sign up to create folders and save your favorite snippets with syntax highlighting for multiple languages and themes.'}
+        </p>
+      </div>
 
       {isLoading ? (
         <div className="flex justify-center pt-42">
           <span className="loading loading-spinner loading-xl opacity-80"></span>
         </div>
       ) : (
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-16 lg:grid-cols-3 xl:grid-cols-4">
-          <div
-            className={`text-code-400 hover:text-code-600 bg-code border-code-100 ring-code-200 pointer-fine:hover:border-code-200 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] place-items-center overflow-hidden rounded-2xl border ring-0 transition-[color,box-shadow] duration-150 select-none pointer-fine:hover:ring-2`}
+        <div className="mt-12 grid gap-3 sm:grid-cols-2 md:mt-16 lg:grid-cols-3 xl:grid-cols-4">
+          <motion.div
+            layoutId="add-folder"
+            className={`text-code-400 hover:text-code-600 bg-code border-code-100 ring-code-200 pointer-fine:hover:border-code-200 relative z-5 grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] place-items-center overflow-hidden rounded-2xl border ring-0 transition-[color,box-shadow] duration-150 select-none pointer-fine:hover:ring-2`}
           >
             {isNewFolderCreating ? (
               <span className="loading loading-spinner loading-xl opacity-80"></span>
             ) : (
               <>
                 <div className="grid justify-items-center">
-                  <span>
-                    <PlusIcon size="36" />
-                  </span>
-                  <span className="text-lg font-semibold">Add Code folder</span>
+                  {user ? (
+                    <>
+                      <span>
+                        <PlusIcon size="36" />
+                      </span>
+                      <span className="text-lg font-semibold">
+                        Add Code folder
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span>
+                        <LogInIcon size="36" />
+                      </span>
+                      <span className="text-lg font-semibold">
+                        {isOldVisitor ? 'Login' : 'Get started'}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <button
                   onClick={() => {
                     if (!user) {
-                      navigate('/auth/login');
+                      navigate(isOldVisitor ? '/auth/login' : '/auth/signup');
                       return;
                     }
                     setAddFolderDetails({
@@ -107,10 +133,14 @@ export default function Home() {
                 ></button>
               </>
             )}
-          </div>
+          </motion.div>
 
           {data?.map((f, i) => (
-            <EachCodeFolderCard key={f._id} i={i} folder={f} />
+            <EachCodeFolderCard
+              key={f._id}
+              i={i}
+              folder={f}
+            />
           ))}
         </div>
       )}
@@ -124,7 +154,10 @@ export default function Home() {
           >
             <div className="mb-4 space-y-2">
               <div className="grid gap-1">
-                <label className="w-fit" htmlFor="folder-title">
+                <label
+                  className="w-fit"
+                  htmlFor="folder-title"
+                >
                   Name
                 </label>
                 <input
@@ -146,7 +179,10 @@ export default function Home() {
               </div>
 
               <div className="grid gap-1">
-                <label className="w-fit" htmlFor="folder-description">
+                <label
+                  className="w-fit"
+                  htmlFor="folder-description"
+                >
                   Description
                 </label>
                 <textarea
@@ -203,12 +239,16 @@ export default function Home() {
       <AnimatePresence>
         {addFolderDetails && (
           <Modal
+            layoutId="add-folder"
             className="w-full max-w-[500px] rounded-2xl bg-white p-4"
             onMouseDown={() => setAddFolderDetails(null)}
           >
             <div className="mb-4 space-y-2">
               <div className="grid gap-1">
-                <label className="w-fit" htmlFor="folder-title">
+                <label
+                  className="w-fit"
+                  htmlFor="folder-title"
+                >
                   Name
                 </label>
                 <input
@@ -230,7 +270,10 @@ export default function Home() {
               </div>
 
               <div className="grid gap-1">
-                <label className="w-fit" htmlFor="folder-description">
+                <label
+                  className="w-fit"
+                  htmlFor="folder-description"
+                >
                   Description
                 </label>
                 <textarea

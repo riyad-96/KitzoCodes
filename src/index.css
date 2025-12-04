@@ -64,6 +64,11 @@ a {
   }
 }
 
+::selection {
+  background-color: hsl(0, 0%, 15%);
+  color: hsl(0, 0%, 90%);
+}
+
 /* Utils */
 button {
   outline: none;
