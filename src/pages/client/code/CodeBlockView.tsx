@@ -18,7 +18,10 @@ type CodeBlockViewProps = {
   linkNavEnabled: boolean;
 };
 
-export default function CodeBlockView({ block }: CodeBlockViewProps) {
+export default function CodeBlockView({
+  block,
+  linkNavEnabled,
+}: CodeBlockViewProps) {
   const { setDeletingInfo, setEditDetails, setEditorState } = useCodeContext();
 
   const [copied, setCopied] = useState<boolean>(false);
@@ -91,36 +94,46 @@ export default function CodeBlockView({ block }: CodeBlockViewProps) {
         </div>
 
         <div className="flex items-center gap-1">
-          <Tooltip content="Delete!">
-            <GlossyButton
-              content={
-                <span className="grid h-7 place-items-center px-3">
-                  <Trash2Icon size="16" />
-                </span>
-              }
-              onClick={() =>
-                setDeletingInfo({
-                  folder_id: block?.folder_id ?? '',
-                  code_block_id: block?._id ?? '',
-                  code_block_title: block?.title ?? '',
-                })
-              }
-            />
-          </Tooltip>
+          <motion.div
+            className="relative z-5 rounded-full"
+            layoutId={`delete-code-block-modal-${block._id}`}
+          >
+            <Tooltip content="Delete!">
+              <GlossyButton
+                content={
+                  <span className="grid h-7 place-items-center px-3">
+                    <Trash2Icon size="16" />
+                  </span>
+                }
+                onClick={() =>
+                  setDeletingInfo({
+                    folder_id: block?.folder_id,
+                    code_block_id: block?._id,
+                    code_block_title: block?.title,
+                  })
+                }
+              />
+            </Tooltip>
+          </motion.div>
 
-          <Tooltip content="Edit">
-            <GlossyButton
-              content={
-                <span className="grid h-7 place-items-center px-3">
-                  <PencilLineIcon size="16" />
-                </span>
-              }
-              onClick={() => {
-                setEditDetails(block);
-                setEditorState('update');
-              }}
-            />
-          </Tooltip>
+          <motion.div
+            className="relative z-5 rounded-full"
+            layoutId={`update-code-block-modal-${block._id}`}
+          >
+            <Tooltip content="Edit">
+              <GlossyButton
+                content={
+                  <span className="grid h-7 place-items-center px-3">
+                    <PencilLineIcon size="16" />
+                  </span>
+                }
+                onClick={() => {
+                  setEditDetails(block);
+                  setEditorState('update');
+                }}
+              />
+            </Tooltip>
+          </motion.div>
 
           <Tooltip content={copied ? 'Copied' : 'Copy'}>
             <GlossyButton
@@ -164,7 +177,9 @@ export default function CodeBlockView({ block }: CodeBlockViewProps) {
         </div>
       </div>
 
-      <div className="mx-auto w-[clamp(16.875rem,-3.125rem+100vw,44.8125rem)] md:w-[clamp(31.125rem,-16.875rem+100vw,66.5rem)]">
+      <div
+        className={`mx-auto w-[clamp(16.875rem,-3.125rem+100vw,44.8125rem)] ${linkNavEnabled ? 'md:w-[clamp(31.125rem,-16.875rem+100vw,66.5rem)]' : 'md:w-[clamp(44.375rem,-2.7769rem+98.2332vw,79.125rem)]'}`}
+      >
         <SyntaxHighlighter
           children={block?.code as string}
           style={getStyle(block?.theme)}

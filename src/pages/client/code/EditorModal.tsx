@@ -17,6 +17,7 @@ type EditorModalProps = {
   };
   isAdding: boolean;
   isUpdating: boolean;
+  layoutId?: string;
 };
 
 export default function EditorModal({
@@ -25,6 +26,7 @@ export default function EditorModal({
   actions,
   isAdding,
   isUpdating,
+  layoutId,
 }: EditorModalProps) {
   const { editDetails } = useCodeContext();
   const { addNewCodeBlock, updateCodeBlock } = actions;
@@ -68,12 +70,16 @@ export default function EditorModal({
 
   return (
     <Modal
+      layoutId={layoutId}
       onMouseDown={() => setEditorState(null)}
-      className="bg-code w-full max-w-[700px] space-y-2 rounded-2xl p-4 shadow-md"
+      className="bg-code w-full max-w-[700px] space-y-2 p-4 rounded-2xl shadow-md"
     >
       <div className="grid gap-2">
         <div className="grid gap-1">
-          <label className="w-fit pl-1" htmlFor="block-title">
+          <label
+            className="w-fit pl-1"
+            htmlFor="block-title"
+          >
             Title
           </label>
           <input
@@ -88,7 +94,10 @@ export default function EditorModal({
           />
         </div>
         <div className="grid gap-1">
-          <label className="w-fit pl-1" htmlFor="block-description">
+          <label
+            className="w-fit pl-1"
+            htmlFor="block-description"
+          >
             Description
           </label>
           <textarea

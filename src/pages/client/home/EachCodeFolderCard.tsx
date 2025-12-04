@@ -39,7 +39,8 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
   // delete folder
 
   return (
-    <div
+    <motion.div
+      layoutId={`folder_card_${folder._id}`}
       className={`bg-code ring-code-200 border-code-100 relative grid min-h-[clamp(7.5rem,5.6484rem+8.2292vw,12.4375rem)] cursor-default grid-rows-[1fr_auto] overflow-hidden rounded-2xl border px-4 py-3 ring-0 transition-shadow duration-150 ${dropdownShowing ? 'border-code-200 ring-3' : 'pointer-fine:hover:border-code-200 pointer-fine:hover:ring-2'}`}
     >
       <button
@@ -184,6 +185,6 @@ export default function EachCodeFolderCard({ i, folder }: EachCodeFolderCard) {
           </div>
         </Tooltip>
       </div>
-    </div>
+    </motion.div>
   );
 }

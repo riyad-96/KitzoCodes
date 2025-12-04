@@ -7,7 +7,7 @@ import Modal from '../../../components/ui/Modal';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useAxios } from '../../../hooks/axios.hook';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import { FileBracesCornerIcon, PencilLineIcon } from 'lucide-react';
@@ -24,8 +24,13 @@ import type { UpdateFolderDetailsType } from '../../../contexts/CodeContext';
 
 export default function CodeFolder() {
   const { user } = useAuthContext();
-  const { editorState, setEditorState, deletingInfo, setDeletingInfo } =
-    useCodeContext();
+  const {
+    editorState,
+    setEditorState,
+    deletingInfo,
+    setDeletingInfo,
+    editDetails,
+  } = useCodeContext();
 
   const server = useAxios();
   const params = useParams();
@@ -151,7 +156,8 @@ export default function CodeFolder() {
             {codeFolder?.folder_description || 'No description yet'}
           </p>
         </div>
-        <div>
+
+        <motion.div layoutId="folder-details-update-modal">
           <Tooltip
             content={
               <span className="bg-code-800 box-content grid min-w-20 rounded-md px-2 py-1.5 text-center text-xs font-light tracking-wide text-white">
@@ -181,7 +187,7 @@ export default function CodeFolder() {
               }
             />
           </Tooltip>
-        </div>
+        </motion.div>
       </div>
 
       <div className="mt-4 mb-6 flex items-center justify-between">
@@ -199,16 +205,22 @@ export default function CodeFolder() {
             :<span>{code_blocks.length}</span>
           </div>
         </Tooltip>
-        <div>
+
+        <motion.div
+          className="relative z-5"
+          layoutId="create-code-block-modal"
+        >
           <GlossyButton
             content={<span className="bg-white px-6 py-2">Add Block</span>}
             onClick={() => setEditorState('new')}
           />
-        </div>
+        </motion.div>
       </div>
 
       {code_blocks.length > 0 ? (
-        <div className="grid gap-3 md:grid-cols-[auto_1fr]">
+        <div
+          className={`grid ${code_blocks.length > 1 ? 'gap-3 md:grid-cols-[auto_1fr]' : ''}`}
+        >
           {code_blocks.length > 1 && (
             <div className="w-[200px] max-md:hidden">
               <CodeNavMenu code_blocks={code_blocks} />
@@ -232,6 +244,11 @@ export default function CodeFolder() {
       <AnimatePresence>
         {editorState && (
           <EditorModal
+            layoutId={
+              editorState === 'new'
+                ? 'create-code-block-modal'
+                : `update-code-block-modal-${editDetails?._id}`
+            }
             editorState={editorState}
             setEditorState={setEditorState}
             actions={{ addNewCodeBlock, updateCodeBlock }}
@@ -244,6 +261,7 @@ export default function CodeFolder() {
       <AnimatePresence>
         {deletingInfo && (
           <DeleteModal
+            id={deletingInfo.code_block_id}
             title="Delete code block!"
             description={
               <span className="font-light tracking-wide">
@@ -267,6 +285,7 @@ export default function CodeFolder() {
       <AnimatePresence>
         {updateDetails && (
           <Modal
+            layoutId="folder-details-update-modal"
             className="w-full max-w-[500px] rounded-2xl bg-white p-4"
             onMouseDown={() => setUpdateDetails(null)}
           >

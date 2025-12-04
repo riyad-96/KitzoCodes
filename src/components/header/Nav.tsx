@@ -39,7 +39,10 @@ export default function Nav() {
           <div className="relative">
             <div className="relative size-8 overflow-hidden rounded-full">
               {user.photoURL ? (
-                <img src={user.photoURL} alt={user.displayName as string} />
+                <img
+                  src={user.photoURL}
+                  alt={user.displayName as string}
+                />
               ) : (
                 <span className="text-code-800 grid size-full">
                   <ProfilePlaceholderSvg className="size-full" />
@@ -75,9 +78,9 @@ export default function Nav() {
                   transition={{
                     duration: 0.1,
                   }}
-                  className="dropdown bg-code absolute top-[calc(100%+20px)] right-0 w-[120px] origin-top-right rounded-lg p-1 shadow"
+                  className="dropdown overflow-hidden bg-code absolute top-[calc(100%+20px)] right-0 w-[120px] origin-top-right rounded-lg py-1 shadow"
                 >
-                  <div className="grid overflow-hidden rounded-md">
+                  <div className="grid">
                     <button className="pointer-fine:hover:bg-code-50 py-1.5">
                       Profile
                     </button>
@@ -108,7 +111,10 @@ export default function Nav() {
           </Link>
           <GlossyButton
             content={
-              <Link className="px-3 py-1" to="/auth/signup">
+              <Link
+                className="px-3 py-1"
+                to="/auth/signup"
+              >
                 Register
               </Link>
             }
