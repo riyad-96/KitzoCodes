@@ -34,6 +34,9 @@
 * {
   scrollbar-width: thin;
 }
+html{
+  scroll-behavior: smooth;
+}
 body {
   font-family:
     'Outfit',

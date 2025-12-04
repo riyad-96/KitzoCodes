@@ -208,7 +208,7 @@ export default function CodeFolder() {
       </div>
 
       {code_blocks.length > 0 ? (
-        <div className="grid gap-2 md:grid-cols-[auto_1fr]">
+        <div className="grid gap-3 md:grid-cols-[auto_1fr]">
           {code_blocks.length > 1 && (
             <div className="w-[200px] max-md:hidden">
               <CodeNavMenu code_blocks={code_blocks} />
@@ -220,6 +220,7 @@ export default function CodeFolder() {
               <CodeBlockView
                 key={block._id}
                 block={block}
+                linkNavEnabled={code_blocks.length > 1}
               />
             ))}
           </div>

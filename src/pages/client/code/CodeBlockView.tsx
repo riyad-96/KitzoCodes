@@ -15,6 +15,7 @@ import { getStyle, supportedThemes } from './utils/editorStyle';
 
 type CodeBlockViewProps = {
   block: CodeBlock;
+  linkNavEnabled: boolean;
 };
 
 export default function CodeBlockView({ block }: CodeBlockViewProps) {
@@ -22,9 +23,19 @@ export default function CodeBlockView({ block }: CodeBlockViewProps) {
 
   const [copied, setCopied] = useState<boolean>(false);
 
+  const id = block.title.trim()
+    ? block?.title
+        .trim()
+        .toLowerCase()
+        .replaceAll(/[^a-zA-Z0-9_]/g, '_')
+        .replaceAll(/_+/g, '_') +
+      '_' +
+      block._id
+    : `untitled_${block._id}`;
+
   return (
     <div
-      id={`#${block?.title.trim().toLowerCase().replaceAll(' ', '_')}`}
+      id={'#' + id}
       className="bg-code relative scroll-mt-[85px] rounded-2xl px-3 pt-4 pb-3 shadow"
     >
       <div className="absolute top-0 right-4 -translate-y-1/3">
@@ -65,7 +76,10 @@ export default function CodeBlockView({ block }: CodeBlockViewProps) {
         <div className="flex items-center gap-1">
           <Tooltip content="Language">
             <span className="bg-code-50 border-code-100 inset-shadow-code grid h-7 cursor-default place-items-center rounded-full border px-3 text-sm shadow-xs inset-shadow-2xs">
-              {supportedLanguages.find((l) => l.value === block?.language)?.name}
+              {
+                supportedLanguages.find((l) => l.value === block?.language)
+                  ?.name
+              }
             </span>
           </Tooltip>
 
@@ -150,7 +164,7 @@ export default function CodeBlockView({ block }: CodeBlockViewProps) {
         </div>
       </div>
 
-      <div className="mx-auto">
+      <div className="mx-auto w-[clamp(16.875rem,-3.125rem+100vw,44.8125rem)] md:w-[clamp(31.125rem,-16.875rem+100vw,66.5rem)]">
         <SyntaxHighlighter
           children={block?.code as string}
           style={getStyle(block?.theme)}
@@ -159,7 +173,6 @@ export default function CodeBlockView({ block }: CodeBlockViewProps) {
             fontSize: 'clamp(0.875rem, 0.8333rem + 0.1852vw, 1rem)',
             padding: '0.625rem 1rem',
             margin: 0,
-            width: 500,
             minHeight: 40,
             maxHeight: 450,
             borderRadius: '0.5rem',
