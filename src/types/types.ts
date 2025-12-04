@@ -23,6 +23,10 @@ export type CodeFolder = {
   updated_at: number | string | Date;
 };
 
+export type CodeFolderWithCodeBlocks = Omit<CodeFolder, 'code_blocks'> & {
+  code_blocks: CodeBlock[];
+};
+
 export type ClientCodeFolderPostType = Omit<
   CodeFolder,
   '_id' | 'created_at' | 'updated_at'

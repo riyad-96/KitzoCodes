@@ -15,3 +15,9 @@ export type DeleteInfoType = {
   code_block_id: string;
   folder_id: string;
 };
+
+export type CodePartialsType = {
+  _id: string;
+  title: string;
+  language: string;
+};

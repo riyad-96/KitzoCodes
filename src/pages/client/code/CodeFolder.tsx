@@ -1,19 +1,23 @@
+import CodeNavMenu from './components/CodeNavMenu';
+import EditorModal from './EditorModal';
+import GlossyButton from '../../../components/ui/GlossyButton';
+import CodeBlockView from './CodeBlockView';
+import DeleteModal from '../../../components/ui/DeleteModal';
+import Modal from '../../../components/ui/Modal';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useAxios } from '../../../hooks/axios.hook';
 import { AnimatePresence } from 'motion/react';
-import EditorModal from './EditorModal';
-import GlossyButton from '../../../components/ui/GlossyButton';
-import CodeBlockView from './CodeBlockView';
 import { useAuthContext } from '../../../contexts/AuthContext';
-import DeleteModal from '../../../components/ui/DeleteModal';
 import { useCodeContext } from '../../../contexts/CodeContext';
-import Modal from '../../../components/ui/Modal';
 import { FileBracesCornerIcon, PencilLineIcon } from 'lucide-react';
 import { Tooltip } from 'kitzo/react';
 
 // types
-import type { CodeFolder } from '../../../types/types';
+import type {
+  CodeFolder,
+  CodeFolderWithCodeBlocks,
+} from '../../../types/types';
 import type { AxiosError } from 'axios';
 import type { EditorValuesType, EditorUpdateValuesType } from './types/types';
 import type { UpdateFolderDetailsType } from '../../../contexts/CodeContext';
@@ -32,7 +36,7 @@ export default function CodeFolder() {
     data: codeFolder,
     isLoading: codeFolderLoading,
     error: codeFolderError,
-  } = useQuery<CodeFolder, AxiosError>({
+  } = useQuery<CodeFolderWithCodeBlocks, AxiosError>({
     queryKey: ['code_folder', codeFolderId],
     queryFn: async () => {
       const response = await server.get(`/codefolder/get/${codeFolderId}`);
@@ -40,6 +44,8 @@ export default function CodeFolder() {
     },
     enabled: !!user,
   });
+
+  const code_blocks = codeFolder?.code_blocks ?? [];
 
   // udpate folder details
   const {
@@ -63,6 +69,9 @@ export default function CodeFolder() {
         setEditorState(null);
         queryClient.invalidateQueries({
           queryKey: ['code_folder', codeFolderId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['code_partials', codeFolderId],
         });
       },
     },
@@ -89,6 +98,9 @@ export default function CodeFolder() {
         queryClient.invalidateQueries({
           queryKey: ['code_folders'],
         });
+        queryClient.invalidateQueries({
+          queryKey: ['code_partials', codeFolderId],
+        });
       },
     });
 
@@ -106,10 +118,11 @@ export default function CodeFolder() {
         queryClient.invalidateQueries({
           queryKey: ['code_folder', codeFolderId],
         });
+        queryClient.invalidateQueries({
+          queryKey: ['code_partials', codeFolderId],
+        });
       },
     });
-
-  // edit folder details
 
   if (codeFolderError) {
     return (
@@ -173,7 +186,7 @@ export default function CodeFolder() {
 
       <div className="mt-4 mb-6 flex items-center justify-between">
         <Tooltip
-          content={`${codeFolder?.code_blocks.length} Blocks`}
+          content={`${code_blocks.length} Blocks`}
           tooltipOptions={{
             position: 'top-start',
           }}
@@ -183,7 +196,7 @@ export default function CodeFolder() {
             <span>
               <FileBracesCornerIcon size="14" />
             </span>
-            :<span>{codeFolder?.code_blocks.length}</span>
+            :<span>{code_blocks.length}</span>
           </div>
         </Tooltip>
         <div>
@@ -194,11 +207,22 @@ export default function CodeFolder() {
         </div>
       </div>
 
-      {(codeFolder?.code_blocks?.length ?? 0 > 0) ? (
-        <div className="space-y-8">
-          {codeFolder?.code_blocks?.map((b) => (
-            <CodeBlockView key={b} codeBlockId={b} />
-          ))}
+      {code_blocks.length > 0 ? (
+        <div className="grid gap-2 md:grid-cols-[auto_1fr]">
+          {code_blocks.length > 1 && (
+            <div className="w-[200px] max-md:hidden">
+              <CodeNavMenu code_blocks={code_blocks} />
+            </div>
+          )}
+
+          <div className="space-y-8">
+            {code_blocks.map((block) => (
+              <CodeBlockView
+                key={block._id}
+                block={block}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <p className="pt-16 text-center">No Code blocks in this folder yet</p>
@@ -247,7 +271,10 @@ export default function CodeFolder() {
           >
             <div className="mb-4 space-y-2">
               <div className="grid gap-1">
-                <label className="w-fit" htmlFor="folder-title">
+                <label
+                  className="w-fit"
+                  htmlFor="folder-title"
+                >
                   Name
                 </label>
                 <input
@@ -269,7 +296,10 @@ export default function CodeFolder() {
               </div>
 
               <div className="grid gap-1">
-                <label className="w-fit" htmlFor="folder-description">
+                <label
+                  className="w-fit"
+                  htmlFor="folder-description"
+                >
                   Description
                 </label>
                 <textarea

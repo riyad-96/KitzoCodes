@@ -4,16 +4,13 @@ import Footer from '../components/footer/Footer';
 
 export default function ClientLayout() {
   return (
-    <div className="scroller-element h-full overflow-y-auto px-2 md:px-3">
-      <div className="mx-auto h-full max-w-[1300px]">
-        <Header />
-        <div className="grid h-full grid-rows-[1fr_auto] pt-20">
-          <div>
-            <Outlet />
-          </div>
-          <Footer />
-        </div>
-      </div>
+    <div className="scroller-element grid h-full grid-rows-[auto_1fr_auto] overflow-y-auto px-2 md:px-3">
+      <Header />
+
+      <main className="mx-auto w-full max-w-[1300px]">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }

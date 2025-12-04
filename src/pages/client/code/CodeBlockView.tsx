@@ -1,45 +1,32 @@
 import type { CodeBlock } from '../../../types/types';
-import { useQuery } from '@tanstack/react-query';
-import { useAxios } from '../../../hooks/axios.hook';
 import GlossyButton from '../../../components/ui/GlossyButton';
 import { CheckIcon, CopyIcon, PencilLineIcon, Trash2Icon } from 'lucide-react';
 import kitzo from 'kitzo';
 import { Tooltip } from 'kitzo/react';
 import { useState } from 'react';
-import { getStyle, supportedThemes } from './utils/editorStyle';
 import { supportedLanguages } from './utils/editorLanguage';
-import CodeBlockViewLoader from './components/CodeBlockViewLoader';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import FormatedDate from '../home/components/FormatedDate';
 import { AnimatePresence, motion } from 'motion/react';
 
 // syntax highlighting
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { getStyle, supportedThemes } from './utils/editorStyle';
 
 type CodeBlockViewProps = {
-  codeBlockId: string;
+  block: CodeBlock;
 };
 
-export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
-  const server = useAxios();
+export default function CodeBlockView({ block }: CodeBlockViewProps) {
   const { setDeletingInfo, setEditDetails, setEditorState } = useCodeContext();
-
-  const { data, isLoading } = useQuery<CodeBlock>({
-    queryKey: ['code_block', codeBlockId],
-    queryFn: async () => {
-      const response = await server.get(`/code/get/${codeBlockId}`);
-      return response.data;
-    },
-  });
 
   const [copied, setCopied] = useState<boolean>(false);
 
-  if (isLoading) {
-    return <CodeBlockViewLoader />;
-  }
-
   return (
-    <div className="border-code-100 bg-code relative rounded-2xl border px-3 pt-4 pb-3 shadow">
+    <div
+      id={`#${block?.title.trim().toLowerCase().replaceAll(' ', '_')}`}
+      className="bg-code relative scroll-mt-[85px] rounded-2xl px-3 pt-4 pb-3 shadow"
+    >
       <div className="absolute top-0 right-4 -translate-y-1/3">
         <Tooltip
           content="Created on"
@@ -50,22 +37,22 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
         >
           <FormatedDate
             className="bg-code-50 border-code-100 inset-shadow-code border shadow-xs inset-shadow-2xs"
-            time={data?.created_at as string}
+            time={block?.created_at as string}
           />
         </Tooltip>
       </div>
 
       <div className="mb-3 pl-2">
         <h3 className="text-code-800 text-lg font-medium md:text-xl">
-          {data?.title ? (
-            data?.title
+          {block?.title ? (
+            block?.title
           ) : (
             <span className="text-code-400">Untitled code block</span>
           )}
         </h3>
         <p className="text-code-700">
-          {data?.description ? (
-            data?.description
+          {block?.description ? (
+            block?.description
           ) : (
             <span className="text-code-300">
               No description yet. Add one if you like
@@ -78,13 +65,13 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
         <div className="flex items-center gap-1">
           <Tooltip content="Language">
             <span className="bg-code-50 border-code-100 inset-shadow-code grid h-7 cursor-default place-items-center rounded-full border px-3 text-sm shadow-xs inset-shadow-2xs">
-              {supportedLanguages.find((l) => l.value === data?.language)?.name}
+              {supportedLanguages.find((l) => l.value === block?.language)?.name}
             </span>
           </Tooltip>
 
           <Tooltip content="Theme">
             <span className="bg-code-50 border-code-100 inset-shadow-code grid h-7 cursor-default place-items-center rounded-full border px-3 text-sm shadow-xs inset-shadow-2xs">
-              {supportedThemes.find((t) => t.value === data?.theme)?.name}
+              {supportedThemes.find((t) => t.value === block?.theme)?.name}
             </span>
           </Tooltip>
         </div>
@@ -99,9 +86,9 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
               }
               onClick={() =>
                 setDeletingInfo({
-                  folder_id: data?.folder_id ?? '',
-                  code_block_id: data?._id ?? '',
-                  code_block_title: data?.title ?? '',
+                  folder_id: block?.folder_id ?? '',
+                  code_block_id: block?._id ?? '',
+                  code_block_title: block?.title ?? '',
                 })
               }
             />
@@ -115,7 +102,7 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
                 </span>
               }
               onClick={() => {
-                setEditDetails(data as CodeBlock);
+                setEditDetails(block);
                 setEditorState('update');
               }}
             />
@@ -153,7 +140,7 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
                 </span>
               }
               onClick={() => {
-                kitzo.copy(data?.code);
+                kitzo.copy(block?.code);
                 if (copied) return;
                 setCopied(true);
                 setTimeout(() => setCopied(false), 1500);
@@ -163,15 +150,16 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
         </div>
       </div>
 
-      <div className="mx-auto w-[clamp(16.875rem,-3.125rem+100vw,44.8125rem)] overflow-auto md:w-[clamp(710px,-58px+100vw,1274px)]">
+      <div className="mx-auto">
         <SyntaxHighlighter
-          children={data?.code as string}
-          style={getStyle(data?.theme)}
-          language={data?.language}
+          children={block?.code as string}
+          style={getStyle(block?.theme)}
+          language={block?.language}
           customStyle={{
             fontSize: 'clamp(0.875rem, 0.8333rem + 0.1852vw, 1rem)',
             padding: '0.625rem 1rem',
             margin: 0,
+            width: 500,
             minHeight: 40,
             maxHeight: 450,
             borderRadius: '0.5rem',
@@ -185,7 +173,7 @@ export default function CodeBlockView({ codeBlockId }: CodeBlockViewProps) {
           <span className="text-sm">Updated:</span>
           <FormatedDate
             className="bg-code-50 shadow-xs"
-            time={data?.updated_at as string}
+            time={block?.updated_at as string}
           />
         </div>
       </div>
