@@ -105,7 +105,6 @@ export default function EditorModal({
               value={values.language}
               onChange={({ value }) => {
                 setValues((prev) => ({ ...prev, language: value }));
-                console.log(value);
               }}
               options={supportedLanguages}
             />
