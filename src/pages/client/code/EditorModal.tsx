@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import GlossyButton from '../../../components/ui/GlossyButton';
 import Modal from '../../../components/ui/Modal';
 
-import Select from 'react-select';
 import { supportedLanguages } from './utils/editorLanguage';
-import { groupedThemes, supportedThemes } from './utils/editorStyle';
+import { supportedThemes } from './utils/editorStyle';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import type { EditorUpdateValuesType, EditorValuesType } from './types/types';
 
@@ -50,29 +49,11 @@ export default function EditorModal({
     };
   });
 
-  function getDefaultLanguage() {
-    const defaultLanguage = supportedLanguages.find(
-      (l) => l.value === values.language,
-    );
-    return {
-      value: defaultLanguage?.value,
-      label: defaultLanguage?.name,
-    };
-  }
-
-  function getDefaultTheme() {
-    const defaultTheme = supportedThemes.find((t) => t.value === values.theme);
-    return {
-      value: defaultTheme?.value,
-      label: defaultTheme?.name,
-    };
-  }
-
   return (
     <Modal
       layoutId={layoutId}
       onMouseDown={() => setEditorState(null)}
-      className="bg-code w-full max-w-[700px] space-y-2 p-4 rounded-2xl shadow-md"
+      className="bg-code w-full max-w-[700px] space-y-2 rounded-2xl p-4 shadow-md"
     >
       <div className="grid gap-2">
         <div className="grid gap-1">
@@ -115,37 +96,50 @@ export default function EditorModal({
       <div className="relative grid gap-2">
         <div className="grid gap-2 sm:flex sm:items-center sm:justify-end">
           <div className="flex items-center gap-2">
-            <span className="max-sm:flex-1 max-sm:pl-1">Language</span>
-            <Select
-              id="language"
-              className="min-w-[130px] text-sm max-sm:flex-2"
-              value={getDefaultLanguage()}
-              onChange={(target) =>
+            <label
+              htmlFor="language-select"
+              className="max-sm:flex-1 max-sm:pl-1"
+            >
+              Language
+            </label>
+            <select
+              id="language-select"
+              className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 min-w-[130px] rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none max-sm:flex-2"
+              value={values.language}
+              onChange={(e) =>
                 setValues((prev) => ({
                   ...prev,
-                  language: target?.value as string,
+                  language: e.target.value,
                 }))
               }
-              options={supportedLanguages.map((l) => ({
-                label: l.name,
-                value: l.value,
-              }))}
-            />
+            >
+              {supportedLanguages.map((l) => (
+                <option value={l.value}>{l.name}</option>
+              ))}
+            </select>
           </div>
           <div className="flex items-center gap-2">
-            <span className="max-sm:flex-1 max-sm:pl-1">Theme</span>
-            <Select
-              id="language"
-              className="min-w-[130px] text-sm max-sm:flex-2"
-              value={getDefaultTheme()}
-              onChange={(target) =>
+            <label
+              htmlFor="theme-select"
+              className="max-sm:flex-1 max-sm:pl-1"
+            >
+              Theme
+            </label>
+            <select
+              id="theme-select"
+              className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 min-w-[130px] rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none max-sm:flex-2"
+              value={values.theme}
+              onChange={(e) =>
                 setValues((prev) => ({
                   ...prev,
-                  theme: target?.value as string,
+                  theme: e.target.value,
                 }))
               }
-              options={groupedThemes}
-            />
+            >
+              {supportedThemes.map((t) => (
+                <option value={t.value}>{t.name}</option>
+              ))}
+            </select>
           </div>
         </div>
         <textarea
@@ -154,7 +148,7 @@ export default function EditorModal({
             setValues((prev) => ({ ...prev, code: e.target.value }))
           }
           placeholder="Type/paste code here"
-          className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 relative max-h-[500px] min-h-[150px] resize-y overflow-y-auto rounded-md border px-2.5 py-1.5 font-[monospace] text-base ring-2 ring-transparent transition-shadow outline-none"
+          className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 relative max-h-[500px] min-h-[150px] resize-y rounded-md border px-2.5 py-1.5 font-[monospace] text-base ring-2 ring-transparent transition-shadow outline-none"
         />
       </div>
 

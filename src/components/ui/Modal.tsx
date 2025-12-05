@@ -23,9 +23,6 @@ export default function Modal({
     >
       <motion.div
         layoutId={layoutId}
-        // initial={{ opacity: 0, scale: 1.2 }}
-        // animate={{ opacity: 1, scale: 1 }}
-        // exit={{ scale: 0.8, opacity: 0 }}
         onMouseDown={(e) => e.stopPropagation()}
         className={className}
       >
