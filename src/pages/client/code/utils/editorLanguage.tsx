@@ -29,7 +29,7 @@ import zig from 'react-syntax-highlighter/dist/esm/languages/prism/zig';
 import lua from 'react-syntax-highlighter/dist/esm/languages/prism/lua';
 import docker from 'react-syntax-highlighter/dist/esm/languages/prism/docker';
 
-type SupportedLanguagesType = {
+export type SupportedLanguagesType = {
   name: string;
   import: unknown;
   value: string;

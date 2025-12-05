@@ -34,10 +34,12 @@ export default function useDropdownClose({
       if (e.key === 'Escape') onClose();
     }
 
+    document.addEventListener('click', handleClose);
     document.addEventListener('mousedown', handleClose);
     document.addEventListener('touchstart', handleClose);
     document.addEventListener('keydown', handleEsc);
     return () => {
+      document.removeEventListener('click', handleClose);
       document.removeEventListener('mousedown', handleClose);
       document.removeEventListener('touchstart', handleClose);
       document.removeEventListener('keydown', handleEsc);

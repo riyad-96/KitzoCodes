@@ -6,6 +6,7 @@ import { supportedLanguages } from './utils/editorLanguage';
 import { supportedThemes } from './utils/editorStyle';
 import { useCodeContext } from '../../../contexts/CodeContext';
 import type { EditorUpdateValuesType, EditorValuesType } from './types/types';
+import Select from './components/Select';
 
 type EditorModalProps = {
   editorState: 'new' | 'update' | null;
@@ -96,59 +97,42 @@ export default function EditorModal({
       <div className="relative grid gap-2">
         <div className="grid gap-2 sm:flex sm:items-center sm:justify-end">
           <div className="flex items-center gap-2">
-            <label
-              htmlFor="language-select"
-              className="max-sm:flex-1 max-sm:pl-1"
-            >
-              Language
-            </label>
-            <select
-              id="language-select"
-              className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 min-w-[130px] rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none max-sm:flex-2"
+            <span className="max-sm:flex-1 max-sm:pl-1">Language</span>
+            <Select
+              className={
+                'border-code-200 focus-within:border-code-300 ring-code-300 rounded-md border ring-0 transition-shadow focus-within:ring-2 max-sm:flex-2 sm:w-[120px]'
+              }
               value={values.language}
-              onChange={(e) =>
-                setValues((prev) => ({
-                  ...prev,
-                  language: e.target.value,
-                }))
-              }
-            >
-              {supportedLanguages.map((l) => (
-                <option value={l.value}>{l.name}</option>
-              ))}
-            </select>
+              onChange={({ value }) => {
+                setValues((prev) => ({ ...prev, language: value }));
+                console.log(value);
+              }}
+              options={supportedLanguages}
+            />
           </div>
+
           <div className="flex items-center gap-2">
-            <label
-              htmlFor="theme-select"
-              className="max-sm:flex-1 max-sm:pl-1"
-            >
-              Theme
-            </label>
-            <select
-              id="theme-select"
-              className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 min-w-[130px] rounded-md border px-3 py-1.5 ring-2 ring-transparent transition-shadow outline-none max-sm:flex-2"
-              value={values.theme}
-              onChange={(e) =>
-                setValues((prev) => ({
-                  ...prev,
-                  theme: e.target.value,
-                }))
+            <span className="max-sm:flex-1 max-sm:pl-1">Theme</span>
+            <Select
+              className={
+                'border-code-200 focus-within:border-code-300 ring-code-300 rounded-md border ring-0 transition-shadow focus-within:ring-2 max-sm:flex-2 sm:w-[120px]'
               }
-            >
-              {supportedThemes.map((t) => (
-                <option value={t.value}>{t.name}</option>
-              ))}
-            </select>
+              value={values.theme}
+              onChange={({ value }) =>
+                setValues((prev) => ({ ...prev, theme: value }))
+              }
+              options={supportedThemes}
+            />
           </div>
         </div>
+
         <textarea
           value={values.code}
           onChange={(e) =>
             setValues((prev) => ({ ...prev, code: e.target.value }))
           }
           placeholder="Type/paste code here"
-          className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 relative max-h-[500px] min-h-[150px] resize-y rounded-md border px-2.5 py-1.5 font-[monospace] text-base ring-2 ring-transparent transition-shadow outline-none"
+          className="border-code-150 bg-code focus:ring-code-300 focus:border-code-300 relative max-h-[500px] min-h-[150px] resize-y rounded-md border px-2.5 py-1.5 font-[monospace] text-base ring-2 ring-transparent transition-shadow outline-none max-sm:text-sm"
         />
       </div>
 
